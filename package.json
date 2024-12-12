@@ -1,0 +1,23 @@
+{
+  "name": "example-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "ui",
+    "api",
+    "packages/*"
+  ],
+  "scripts": {
+    "start:api": "npm run dev -w api",
+    "start:ui": "npm run dev -w ui",
+    "start:all": "concurrently \"npm run start:api\" \"npm run start:ui\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
