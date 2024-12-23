@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
-import { Person } from 'scheme';
+import { Person } from 'schema';
 
 interface Person {
   id: number

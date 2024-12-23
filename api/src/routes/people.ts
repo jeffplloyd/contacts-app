@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import pool from "../db.config";
-import { Person, PersonWithId } from "scheme";
+import { Person, PersonWithId } from "schema";
 
 const router = Router();
 
