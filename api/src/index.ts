@@ -1,5 +1,5 @@
 import express from "express";
-import peopleRoutes from "./routes/people";
+import contactsRoutes from "./routes/contacts";
 import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger-output.json";
 
@@ -19,7 +19,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-app.use("/people", peopleRoutes);
+app.use("/contacts", contactsRoutes);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
