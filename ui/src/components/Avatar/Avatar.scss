@@ -1,0 +1,26 @@
+:root {
+  --avatar-background: light-dark(#ddd, #282828);
+  --avatar-text: light-dark(#333, #fff);
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--avatar-background);
+  color: var(--avatar-text);
+
+  &--small {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &--large {
+    width: 5.25rem;
+    height: 5.25rem;
+    font-size: 2rem;
+  }
+}

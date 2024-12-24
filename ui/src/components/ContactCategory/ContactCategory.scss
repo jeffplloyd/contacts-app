@@ -1,0 +1,43 @@
+:root {
+  --navitem-text-inactive: light-dark(#353535, #bcbcbc);
+  --navitem-background-hover: light-dark(#e5e5e5, #222);
+  --navitem-text-hover: light-dark(#222, #fff);
+  --navitem-background-active: light-dark(#3969e5, #3969e5);
+  --navitem-text-active: light-dark(#fff, #fff);
+  --badge-nav-background-active: light-dark(#fff, #fff);
+  --badge-nav-text-active: light-dark(#000, #000);
+}
+
+.contact-category {
+  list-style: none;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    border: none;
+    border-radius: 25px;
+    background-color: transparent;
+    color: var(--navitem-text-inactive);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.625rem 0.75rem 0.625rem 1.25rem;
+
+    &:hover {
+      background-color: var(--navitem-background-hover);
+      color: var(--navitem-text-hover);
+    }
+
+    &[data-active="true"] {
+      --badge-background: var(--badge-nav-background-active);
+      --badge-text: var(--badge-nav-text-active);
+      
+      background-color: var(--navitem-background-active);
+      color: var(--navitem-text-active);
+    }
+  }
+}

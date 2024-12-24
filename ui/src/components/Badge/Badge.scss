@@ -1,0 +1,15 @@
+:root {
+  --badge-background: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.15));
+  --badge-text: light-dark(#fff, #fff);
+}
+
+.badge {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  background-color: var(--badge-background);
+  color: var(--badge-text);
+  font-size: 0.75rem;
+  font-weight: 500;
+}

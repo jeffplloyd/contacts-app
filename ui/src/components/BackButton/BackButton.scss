@@ -1,0 +1,24 @@
+:root {
+  --button-tertiary-background: transparent;
+  --button-tertiary-background-hover: light-dark(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.5));
+  --button-tertiary-border: transparent;
+  --button-tertiary-text: light-dark(#000, #fff);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--button-tertiary-border);
+  border-radius: 0.25rem;
+  background-color: var(--button-tertiary-background);
+  color: var(--button-tertiary-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-size: 0.875rem;
+
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}

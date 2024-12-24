@@ -1,38 +1,66 @@
 import { useEffect, useRef, useState } from 'react'
-import './App.css'
-import { Person } from 'schema';
+import './App.scss'
+import { ContactWithId } from 'schema';
+import { z } from 'zod';
+import Panel from './components/Panel/Panel';
+import BackButton from './components/BackButton/BackButton';
+import ContactCategory from './components/ContactCategory/ContactCategory';
+import Contact from './components/Contact/Contact';
 
-interface Person {
-  id: number
-  name: string
-  age: number
-}
+type ContactType = z.infer<typeof ContactWithId>;
 
 function App() {
-  const [person, setPerson] = useState<Person | null>();
+  const [contacts, setContacts] = useState<ContactType[]>([]);
+  const [showSidebar, setShowSidebar] = useState(false);
   const hasFetched = useRef(false);
   useEffect(() => {
     if (hasFetched.current) {
       return;
     }
     hasFetched.current = true;
-    getPerson();
+    getContacts();
   },[]);
 
-  const getPerson = async () => {
-    const response = await fetch('http://localhost:3000/people/2');
+  const getContacts = async () => {
+    const response = await fetch('http://localhost:3000/contacts/');
     const data = await response.json();
-    const result = Person.safeParse(data);
+    const result = ContactWithId.array().safeParse(data.data);
     if (!result.success) {
       throw new Error(`Invalid person data: ${result.error}`);
     }
-    setPerson(result.data);
+    setContacts(result.data);
   }
 
   return (
-    <>
-      { person && <h1>Hello {person.name}!</h1> }
-    </>
+    <main>
+      <nav className="sidebar" data-show={showSidebar}>
+        <Panel>
+          <ul>
+            <ContactCategory
+              onClick={() => setShowSidebar(!showSidebar)}
+              badgeText="2"
+              active={true}
+              category="all"
+            >
+              All
+            </ContactCategory>
+          </ul>
+        </Panel>
+      </nav>
+      
+      <div className="content" data-show={!showSidebar}>
+        <Panel>
+          <div className="content__header">
+            <BackButton onClick={() => setShowSidebar(!showSidebar)}>Categories</BackButton>
+          </div>
+          <ul>
+            { contacts?.map(contact => (
+              <Contact active={contact.id === 1} contact={contact} key={contact.id} />
+            )) }
+          </ul>
+        </Panel>
+      </div>
+    </main>
   )
 }
 
