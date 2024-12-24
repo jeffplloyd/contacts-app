@@ -35,7 +35,7 @@ function App() {
     <main>
       <nav className="sidebar" data-show={showSidebar}>
         <Panel>
-          <ul>
+          <ul className="contact-category-list">
             <ContactCategory
               onClick={() => setShowSidebar(!showSidebar)}
               badgeText="2"
@@ -49,14 +49,75 @@ function App() {
       </nav>
       
       <div className="content" data-show={!showSidebar}>
-        <Panel>
+        <Panel overflowHidden={true}>
           <div className="content__header">
             <BackButton onClick={() => setShowSidebar(!showSidebar)}>Categories</BackButton>
           </div>
-          <ul>
+          <ul className="contact-list">
             { contacts?.map(contact => (
               <Contact active={contact.id === 1} contact={contact} key={contact.id} />
             )) }
+
+            <Contact contact={{
+  "fname": "Jane",
+  "lname": "Doe",
+  "dob": "1990-01-01T00:00:00.000Z",
+  "website": "https://example.com",
+  "personal_email": "lY8jH@example.com",
+  "personal_phone": "123-456-7890",
+  "work_email": "lY8jH@example.com",
+  "work_phone": "123-456-7890",
+  "is_favorite": false,
+  "role_id": null,
+  "created_at": "2024-12-24T05:13:37.146Z",
+  "updated_at": "2024-12-24T05:13:37.146Z",
+  "id": 2
+}}  />
+<Contact contact={{
+  "fname": "Jane",
+  "lname": "Doe",
+  "dob": "1990-01-01T00:00:00.000Z",
+  "website": "https://example.com",
+  "personal_email": "lY8jH@example.com",
+  "personal_phone": "123-456-7890",
+  "work_email": "lY8jH@example.com",
+  "work_phone": "123-456-7890",
+  "is_favorite": false,
+  "role_id": null,
+  "created_at": "2024-12-24T05:13:37.146Z",
+  "updated_at": "2024-12-24T05:13:37.146Z",
+  "id": 2
+}}  />
+<Contact contact={{
+  "fname": "Jane",
+  "lname": "Doe",
+  "dob": "1990-01-01T00:00:00.000Z",
+  "website": "https://example.com",
+  "personal_email": "lY8jH@example.com",
+  "personal_phone": "123-456-7890",
+  "work_email": "lY8jH@example.com",
+  "work_phone": "123-456-7890",
+  "is_favorite": false,
+  "role_id": null,
+  "created_at": "2024-12-24T05:13:37.146Z",
+  "updated_at": "2024-12-24T05:13:37.146Z",
+  "id": 2
+}}  />
+<Contact contact={{
+  "fname": "Jane",
+  "lname": "Doe",
+  "dob": "1990-01-01T00:00:00.000Z",
+  "website": "https://example.com",
+  "personal_email": "lY8jH@example.com",
+  "personal_phone": "123-456-7890",
+  "work_email": "lY8jH@example.com",
+  "work_phone": "123-456-7890",
+  "is_favorite": false,
+  "role_id": null,
+  "created_at": "2024-12-24T05:13:37.146Z",
+  "updated_at": "2024-12-24T05:13:37.146Z",
+  "id": 2
+}}  />
           </ul>
         </Panel>
       </div>

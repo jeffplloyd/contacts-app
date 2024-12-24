@@ -9,10 +9,9 @@
   background-color: var(--panel-background);
   border: 1px solid var(--panel-border);
   border-radius: var(--panel-border-radius);
-  padding: 1rem;
 
-  &--compact {
-    padding: 0.5rem;
+  &--overflow-hidden {
+    overflow: hidden;
   }
 }
 

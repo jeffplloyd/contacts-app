@@ -2,16 +2,16 @@ import "./Panel.scss"
 
 interface PanelProps {
   children: React.ReactNode;
-  compact?: boolean;
+  overflowHidden?: boolean;
 }
 
 const Panel = ({
   children,
-  compact,
+  overflowHidden,
 }: PanelProps) => {
   return (
     <section
-      className={compact ? "panel panel--compact" : "panel"}
+      className={overflowHidden ? "panel panel--overflow-hidden" : "panel"}
     >
       {children}
     </section>
