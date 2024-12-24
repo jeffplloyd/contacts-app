@@ -16,10 +16,12 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
+    "isomorphic-dompurify": "^2.19.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.2.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.1",
     "@types/pg": "^8.11.10",

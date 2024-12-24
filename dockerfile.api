@@ -4,9 +4,9 @@ WORKDIR /
 
 COPY api/package*.json ./
 
-COPY packages/scheme ./packages/scheme
+COPY packages/schema ./packages/schema
 
-RUN npm install file:./packages/scheme
+RUN npm install file:./packages/schema
 
 COPY ./api ./
 
