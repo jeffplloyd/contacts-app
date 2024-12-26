@@ -35,6 +35,12 @@ CREATE TABLE IF NOT EXISTS contacts (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO contacts (fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, is_favorite) VALUES 
-('John', 'Doe', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', true),
-('Jane', 'Doe', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false);
+INSERT INTO contacts (fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, is_favorite, role_id) VALUES 
+('Adam', 'Wong', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', true, 3),
+('Tony', 'Stark', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 5),
+('Bruce', 'Wayne', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 4),
+('Ethan', 'Hunt', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 4),
+('Frank', 'Castle', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 6),
+('John', 'Wick', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 11),
+('Peter', 'Parker', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 11),
+('Tom', 'Smith', '1990-01-01', 'https://example.com', 'lY8jH@example.com', '123-456-7890', 'lY8jH@example.com', '123-456-7890', false, 9);
