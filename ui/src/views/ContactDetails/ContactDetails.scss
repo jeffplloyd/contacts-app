@@ -1,0 +1,71 @@
+.contact-details {
+  &__heading {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.75rem;
+    row-gap: 1.25rem;
+    align-items: center;
+    padding: 1.5rem 1rem 1rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem;
+    height: calc(100vh - 93px);
+    height: calc((var(--vh, 1vh) * 100) - 93px);
+    overflow: auto;
+  }
+
+  &__card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    h2 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__main-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__name {
+    display: flex;
+    row-gap: 0.25rem;
+    flex-direction: column;
+    font-weight: 500;
+
+    span:not(.badge) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 6px;
+    width: 100%;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+:root {
+  --card-background: light-dark(#efefef, #202020);
+}
+
+.card {
+  background-color: var(--card-background);
+  border-radius: 30px;
+  padding: 1.25rem;
+}
