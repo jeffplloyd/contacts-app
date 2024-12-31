@@ -6,7 +6,7 @@ import Contact from './components/Contact/Contact';
 import Button from './components/Button/Button';
 import FormField from './components/FormField/FormField';
 import ContactNavigation from './components/ContactNavigation/ContactNavigation';
-import { ContactType, getContactRoles, getContacts } from './services/contacts';
+import { ContactType, getContactRoles, getContacts, updateFavorite } from './services/contacts';
 import AppRouter from './components/AppRouter';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -94,6 +94,11 @@ function App() {
     setShowSidebar(!showSidebar);
   }
 
+  const handleFavorite = async (id: number) => {
+    await updateFavorite(id);
+    fetchContacts();
+  }
+
   const sortContacts = (contacts: ContactType[]) => {
     const sorted = [...contacts].sort((a, b) => {
       const aName = `${a.fname} ${a.lname}`;
@@ -142,6 +147,15 @@ function App() {
               >
                 Categories
               </BackButton>
+              <button
+                className="content__header__action"
+                type="button"
+                aria-label="New Contact"
+              >
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 1.5C6.09375 1.5 5.28125 2 4.8125 2.75C4.375 3.53125 4.375 4.5 4.8125 5.25C5.28125 6.03125 6.09375 6.5 7 6.5C7.875 6.5 8.6875 6.03125 9.15625 5.25C9.59375 4.5 9.59375 3.53125 9.15625 2.75C8.6875 2 7.875 1.5 7 1.5ZM7 8C5.5625 8 4.25 7.25 3.53125 6C2.8125 4.78125 2.8125 3.25 3.53125 2C4.25 0.78125 5.5625 0 7 0C8.40625 0 9.71875 0.78125 10.4375 2C11.1562 3.25 11.1562 4.78125 10.4375 6C9.71875 7.25 8.40625 8 7 8ZM5.5625 11C3.5 11 1.8125 12.5312 1.53125 14.5H12.4375C12.1562 12.5312 10.4688 11 8.40625 11H5.5625ZM5.5625 9.5H8.40625C11.5 9.5 14 12 14 15.0938C14 15.5938 13.5625 16 13.0625 16H0.90625C0.40625 16 0 15.5938 0 15.0938C0 12 2.46875 9.5 5.5625 9.5ZM15.75 9.75V7.75H13.75C13.3125 7.75 13 7.4375 13 7C13 6.59375 13.3125 6.25 13.75 6.25H15.75V4.25C15.75 3.84375 16.0625 3.5 16.5 3.5C16.9062 3.5 17.25 3.84375 17.25 4.25V6.25H19.25C19.6562 6.25 20 6.59375 20 7C20 7.4375 19.6562 7.75 19.25 7.75H17.25V9.75C17.25 10.1875 16.9062 10.5 16.5 10.5C16.0625 10.5 15.75 10.1875 15.75 9.75Z" fill="currentColor"/>
+                </svg>
+              </button>
             </div>
             <div className="content__header__search">
               <FormField
@@ -185,6 +199,7 @@ function App() {
                         contact={contact}
                         key={contact.id}
                         onClick={() => navigate(`/contact/${contact.id}`)}
+                        onFavorite={handleFavorite}
                       />
                     )) }
                   </ul>

@@ -40,3 +40,15 @@ export const getContactRoles = (contacts: ContactType[]) => {
   }, {});
   return grouped;
 }
+
+export const updateFavorite = async (id: number) => {
+  const response = await fetch(`http://192.168.4.223:3000/contacts/favorite/${id}`, {
+    method: 'PUT'
+  });
+  const data = await response.json();
+  const result = ListContact.safeParse(data);
+  if (!result.success) {
+    throw new Error(`Invalid person data: ${result.error}`);
+  }
+  return (result.data);
+}
