@@ -8,6 +8,23 @@ const doc = {
   },
   host: "localhost:3000",
   schemes: ["http"],
+  definitions: {
+    Contact: {
+      $fname: "John",
+      $lname: "Doe",
+      dob: "1990-01-01",
+      website: "https://example.com",
+      personal_email: "john.doe@example.com",
+      personal_phone: "+1 (123) 456-7890",
+      work_email: "jdoe@work.com",
+      work_phone: "+1 (987) 654-3210",
+      is_favorite: false,
+    },
+    Roles: {
+      id: 1,
+      name: "Admin",
+    },
+  },
 };
 
 const outputFile = "./swagger-output.json";
