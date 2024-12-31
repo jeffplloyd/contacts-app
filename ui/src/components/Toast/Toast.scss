@@ -1,0 +1,52 @@
+:root {
+  --toast-background: light-dark(rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.6));
+  --toast-border: light-dark(#dedede, #181818);
+  --toast-border-info: light-dark(rgba(56, 105, 229, 0.75), rgba(56, 105, 229, 0.75));
+  --toast-border-success: light-dark(rgba(52, 211, 153, 0.75), rgba(52, 211, 153, 0.75));
+  --toast-border-error: light-dark(rgba(239, 68, 68, 0.75), rgba(239, 68, 68, 0.75));
+  --toast-border-radius: 8px;
+  --toast-text: light-dark(#000, #fff);
+}
+
+.toast {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  border: 3px solid var(--toast-border);
+  border-radius: var(--toast-border-radius);
+  background-color: var(--toast-background);
+  backdrop-filter: 
+      saturate(180%)
+      blur(4px);
+  color: var(--toast-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  
+  &--info {
+    border-color: var(--toast-border-info);
+  }
+
+  &--success {
+    border-color: var(--toast-border-success);
+  }
+
+  &--error {
+    border-color: var(--toast-border-error);
+  }
+}
+
+.toast-container {
+  display: flex;
+  flex-direction: column-reverse;
+  row-gap: 0.75rem;
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  width: calc(100% - 3rem);
+  max-width: 400px;
+  transform: translateX(-50%);
+  z-index: 100;
+}
