@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
 import pool from "../db.config";
 import { Contact, ListContact } from "schema";
-import { sanitizedInput } from "../utils";
+import { checkForExistingContact, sanitizedInput } from "../utils";
 
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   /* 
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Get all contacts'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Get all contacts"
   */
   try {
     const { orderBy, orderDirection } = req.query;
@@ -34,8 +34,8 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/list", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts list']
-    #swagger.summary = 'Get all contacts for contact list with total count'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Get all contacts for contact list with total count"
   */
   try {
     const { orderBy, orderDirection } = req.query;
@@ -70,8 +70,8 @@ router.get("/list", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Get constact by id'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Get constact by id"
   */
   try {
     const id = parseInt(sanitizedInput(req.params.id), 10);
@@ -100,8 +100,18 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Create contact'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Create contact"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/definitions/Contact"
+          }  
+        }
+      }
+    } 
   */
   try {
     const body = {
@@ -111,6 +121,11 @@ router.post("/", async (req: Request, res: Response) => {
     const result = Contact.safeParse(body);
     if (!result.success) {
       res.status(400).send(result.error.message);
+      return;
+    }
+    const checkContactExists = await checkForExistingContact(body.fname, body.lname);
+    if (checkContactExists) {
+      res.status(400).send("Contact already exists");
       return;
     }
     const { fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, role_id } = body;
@@ -138,8 +153,18 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.put("/:id", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Update contacts by id'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Update contacts by id"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/definitions/Contact"
+          }  
+        }
+      }
+    } 
   */
   try {
     const body = {
@@ -150,6 +175,11 @@ router.put("/:id", async (req: Request, res: Response) => {
     const result = Contact.safeParse(body);
     if (!result.success) {
       res.status(400).send(result.error.message);
+      return;
+    }
+    const checkContactExists = await checkForExistingContact(body.fname, body.lname);
+    if (checkContactExists) {
+      res.status(400).send("Contact already exists");
       return;
     }
     const id = parseInt(req.params.id, 10);
@@ -197,8 +227,8 @@ router.put("/:id", async (req: Request, res: Response) => {
 
 router.put("/favorite/:id", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Update favorite status by id'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Update favorite status by id"
   */
   try {
     const id = parseInt(req.params.id, 10);
@@ -220,8 +250,8 @@ router.put("/favorite/:id", async (req: Request, res: Response) => {
 
 router.delete("/:id", async (req: Request, res: Response) => {
   /*
-    #swagger.tags = ['Contacts']
-    #swagger.summary = 'Delete contact by id'
+    #swagger.tags = ["Contacts"]
+    #swagger.summary = "Delete contact by id"
   */
   try {
     const id = parseInt(sanitizedInput(req.params.id), 10);
