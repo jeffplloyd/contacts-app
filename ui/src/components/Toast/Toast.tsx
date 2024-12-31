@@ -14,26 +14,24 @@ interface ToastContainerProps {
 };
 
 const Toast = ({id, message, type }: ToastProps) => {
-  const toast = useToast();
+  const { removeToast } = useToast();
   const timerID = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!id) return;
     timerID.current = setTimeout(() => {
-      toast.removeToast(id);
+      removeToast(id);
     }, 5000);
-
-    return () => {
-      if (timerID.current !== null) {
-        clearTimeout(timerID.current);
-      }
-    }
   }, []);
+
+  const handleClick = () => {
+    if (id) removeToast(id);
+  };
 
   return (
     <div
       className={`toast toast--${type}`}
-      onClick={() => {if (id) toast.removeToast(id)}}
+      onClick={handleClick}
     >
       {message}
     </div>
