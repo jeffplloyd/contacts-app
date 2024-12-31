@@ -12,14 +12,22 @@
     "start:api": "npm run dev -w api",
     "start:ui": "npm run dev -w ui",
     "start:all": "concurrently \"npm run start:api\" \"npm run start:ui\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "prettier-plugin-css-order": "^2.1.2"
+  },
+  "lint-staged": {
+    "ui/src/**/*.{js,ts,tsx}": "eslint",
+    "api/src/**/*.{js,ts}": "eslint",
+    "**/*.{js,ts,tsx,scss}": "prettier --write --ignore-unknown"
   }
 }
