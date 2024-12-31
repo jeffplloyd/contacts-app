@@ -1,5 +1,6 @@
 import express from "express";
 import contactsRoutes from "./routes/contacts";
+import rolesRoutes from "./routes/roles";
 import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger-output.json";
 
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/contacts", contactsRoutes);
+app.use("/roles", rolesRoutes);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
