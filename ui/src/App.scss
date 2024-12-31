@@ -96,16 +96,27 @@ main {
     border-bottom: 1px solid var(--panel-border);
 
     .mobile-only {
-      display: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
 
-      @media screen and (max-width: 768px) {
-        display: flex;
+      @media screen and (min-width: 768px) {
+        display: none;
       }
     }
 
     &__search {
       width: calc(100% - 68px);
+    }
+
+    &__action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 3rem;
+      background-color: transparent;
+      color: light-dark(#3969e5, #3969e5);
     }
   }
 }

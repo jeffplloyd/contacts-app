@@ -59,11 +59,13 @@
     flex-wrap: nowrap;
     align-items: center;
     gap: 0.75rem;
-    padding-bottom: 6px;
+    padding-bottom: 0.75rem;
+    margin-bottom: -0.75rem;
     width: 100%;
     overflow: auto;
 
     &::-webkit-scrollbar {
+      -webkit-appearance: none;
       width: 0;
       height: 0;
     }
