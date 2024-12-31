@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "npm run generate:docs && ts-node src/index.ts",
     "dev": "npm run generate:docs && nodemon src/index.ts",
