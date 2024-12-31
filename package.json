@@ -9,6 +9,8 @@
     "packages/*"
   ],
   "scripts": {
+    "lint:api": "cd api && eslint",
+    "lint:ui": "cd ui && eslint",
     "start:api": "npm run dev -w api",
     "start:ui": "npm run dev -w ui",
     "start:all": "concurrently \"npm run start:api\" \"npm run start:ui\"",
@@ -26,8 +28,8 @@
     "prettier-plugin-css-order": "^2.1.2"
   },
   "lint-staged": {
-    "ui/src/**/*.{js,ts,tsx}": "eslint",
-    "api/src/**/*.{js,ts}": "eslint",
+    "ui/src/**/*.{js,ts,tsx}": "npm run lint:ui",
+    "api/src/**/*.{js,ts}": "npm run lint:api",
     "**/*.{js,ts,tsx,scss}": "prettier --write --ignore-unknown"
   }
 }
