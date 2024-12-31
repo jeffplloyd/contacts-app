@@ -13,19 +13,19 @@
 
   button {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
-    width: 100%;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
     border: none;
     border-radius: 25px;
     background-color: transparent;
-    color: var(--navitem-text-inactive);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    font-size: 0.875rem;
-    font-weight: 600;
     padding: 0.625rem 0.75rem 0.625rem 1.25rem;
+    width: 100%;
+    color: var(--navitem-text-inactive);
+    font-weight: 600;
+    font-size: 0.875rem;
 
     &:hover {
       background-color: var(--navitem-background-hover);
@@ -35,7 +35,7 @@
     &[data-active="true"] {
       --badge-background: var(--badge-nav-background-active);
       --badge-text: var(--badge-nav-text-active);
-      
+
       background-color: var(--navitem-background-active);
       color: var(--navitem-text-active);
     }

@@ -12,7 +12,7 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button = ({ 
+const Button = ({
   children,
   icon,
   rounded = false,
@@ -21,10 +21,10 @@ const Button = ({
   fullWidth = false,
   iconOnly = false,
   disabled = false,
-  onClick
+  onClick,
 }: ButtonProps) => {
   return (
-    <button 
+    <button
       className={`button button--${variant} ${rounded ? "button--rounded" : ""} ${fullWidth ? "button--full-width" : ""} ${iconOnly ? "button--icon-only" : ""}`}
       type="button"
       aria-label={label}

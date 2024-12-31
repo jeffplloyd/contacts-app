@@ -4,7 +4,7 @@ import { ToastContainer } from "../components/Toast/Toast";
 export interface Toast {
   id?: string;
   message: string;
-  type:  "success" | "info" | "error";
+  type: "success" | "info" | "error";
 }
 
 const ToastContext = createContext({} as ToastContextValue);
@@ -27,23 +27,23 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
 
   const addToast = (toast: Toast) => {
     toast.id = Math.floor(Math.random() * 10000000).toString();
-    dispatch({ type: 'ADD_TOAST', payload: toast });
+    dispatch({ type: "ADD_TOAST", payload: toast });
   };
 
   const success = (message: string) => {
-    addToast({ message, type: 'success' });
+    addToast({ message, type: "success" });
   };
 
   const info = (message: string) => {
-    addToast({ message, type: 'info' });
+    addToast({ message, type: "info" });
   };
 
   const error = (message: string) => {
-    addToast({ message, type: 'error' });
+    addToast({ message, type: "error" });
   };
 
   const removeToast = (id: string) => {
-    dispatch({ type: 'REMOVE_TOAST', payload: id });
+    dispatch({ type: "REMOVE_TOAST", payload: id });
   };
 
   const value: ToastContextValue = {
@@ -65,10 +65,10 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
 
 const toastReducer = (state: Toast[], action: { type: string; payload: Toast | string }) => {
   switch (action.type) {
-    case 'ADD_TOAST':
+    case "ADD_TOAST":
       return [...state, action.payload as Toast];
-    case 'REMOVE_TOAST':
-      return state.filter(toast => toast.id !== action.payload);
+    case "REMOVE_TOAST":
+      return state.filter((toast) => toast.id !== action.payload);
     default:
       return state;
   }

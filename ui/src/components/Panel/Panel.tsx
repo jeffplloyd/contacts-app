@@ -1,4 +1,4 @@
-import "./Panel.scss"
+import "./Panel.scss";
 
 interface PanelProps {
   children: React.ReactNode;
@@ -6,11 +6,7 @@ interface PanelProps {
   overflowHidden?: boolean;
 }
 
-const Panel = ({
-  children,
-  overflowHidden = false,
-  transparent = false,
-}: PanelProps) => {
+const Panel = ({ children, overflowHidden = false, transparent = false }: PanelProps) => {
   return (
     <section
       className={`panel ${transparent ? "panel--transparent" : ""} ${overflowHidden ? "panel--overflow-hidden" : ""}`}

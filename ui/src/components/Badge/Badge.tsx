@@ -5,11 +5,7 @@ type BadgeProps = {
 };
 
 const Badge = ({ children }: BadgeProps) => {
-  return (
-    <span className="badge">
-      {children}
-    </span>
-  );
+  return <span className="badge">{children}</span>;
 };
 
 export default Badge;

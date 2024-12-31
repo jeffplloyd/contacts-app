@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import pool from "../db.config";
-import { Contact,  ListContact } from "schema";
+import { Contact, ListContact } from "schema";
 import { sanitizedInput } from "../utils";
 
 const router = Router();
@@ -60,7 +60,7 @@ router.get("/list", async (req: Request, res: Response) => {
     });
     res.json({
       data: contacts,
-      totalCount
+      totalCount,
     });
   } catch (error) {
     console.error(error);
@@ -98,7 +98,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async(req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Contacts']
     #swagger.summary = 'Create contact'
@@ -116,7 +116,17 @@ router.post("/", async(req: Request, res: Response) => {
     const { fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, role_id } = body;
     const query = {
       text: "INSERT INTO contacts (fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, role_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-      values: [sanitizedInput(fname), sanitizedInput(lname), sanitizedInput(dob.toISOString().split('T')[0]), sanitizedInput(website), sanitizedInput(personal_email), sanitizedInput(personal_phone), sanitizedInput(work_email), sanitizedInput(work_phone), role_id],
+      values: [
+        sanitizedInput(fname),
+        sanitizedInput(lname),
+        sanitizedInput(dob.toISOString().split("T")[0]),
+        sanitizedInput(website),
+        sanitizedInput(personal_email),
+        sanitizedInput(personal_phone),
+        sanitizedInput(work_email),
+        sanitizedInput(work_phone),
+        role_id,
+      ],
     };
     const response = await pool.query(query);
     res.json(response.rows[0]);
@@ -126,7 +136,7 @@ router.post("/", async(req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async(req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Contacts']
     #swagger.summary = 'Update contacts by id'
@@ -135,7 +145,7 @@ router.put("/:id", async(req: Request, res: Response) => {
     const body = {
       ...req.body,
       dob: new Date(req.body.dob),
-      updated_at: new Date()
+      updated_at: new Date(),
     };
     const result = Contact.safeParse(body);
     if (!result.success) {
@@ -143,10 +153,35 @@ router.put("/:id", async(req: Request, res: Response) => {
       return;
     }
     const id = parseInt(req.params.id, 10);
-    const { fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, is_favorite, role_id, updated_at } = body;
+    const {
+      fname,
+      lname,
+      dob,
+      website,
+      personal_email,
+      personal_phone,
+      work_email,
+      work_phone,
+      is_favorite,
+      role_id,
+      updated_at,
+    } = body;
     const query = {
       text: "UPDATE contacts SET fname = $1, lname = $2, dob = $3, website = $4, personal_email = $5, personal_phone = $6, work_email = $7, work_phone = $8, is_favorite = $9, role_id = $10, updated_at = $11 WHERE id = $12 RETURNING *",
-      values: [sanitizedInput(fname), sanitizedInput(lname), sanitizedInput(dob.toISOString().split('T')[0]), sanitizedInput(website), sanitizedInput(personal_email), sanitizedInput(personal_phone), sanitizedInput(work_email), sanitizedInput(work_phone), is_favorite, sanitizedInput(role_id), updated_at, id ],
+      values: [
+        sanitizedInput(fname),
+        sanitizedInput(lname),
+        sanitizedInput(dob.toISOString().split("T")[0]),
+        sanitizedInput(website),
+        sanitizedInput(personal_email),
+        sanitizedInput(personal_phone),
+        sanitizedInput(work_email),
+        sanitizedInput(work_phone),
+        is_favorite,
+        sanitizedInput(role_id),
+        updated_at,
+        id,
+      ],
     };
     const response = await pool.query(query);
     if (response.rowCount === 0) {
@@ -160,7 +195,7 @@ router.put("/:id", async(req: Request, res: Response) => {
   }
 });
 
-router.put("/favorite/:id", async(req: Request, res: Response) => {
+router.put("/favorite/:id", async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Contacts']
     #swagger.summary = 'Update favorite status by id'
@@ -183,7 +218,7 @@ router.put("/favorite/:id", async(req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async(req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Contacts']
     #swagger.summary = 'Delete contact by id'

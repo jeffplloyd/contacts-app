@@ -5,8 +5,8 @@
 
 .avatar {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   border-radius: 50%;
   background-color: var(--avatar-background);
   color: var(--avatar-text);
@@ -14,8 +14,8 @@
   &--small {
     width: 4rem;
     height: 4rem;
-    font-size: 1.5rem;
     font-weight: 400;
+    font-size: 1.5rem;
   }
 
   &--large {

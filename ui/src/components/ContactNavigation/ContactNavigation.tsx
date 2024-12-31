@@ -20,8 +20,8 @@ const ContactNavigation = ({ contacts, activeCategory, handleCategoryClick }: Co
         >
           All Contacts
         </ContactCategory>
-        
-        { contacts.filter((contact) => contact.is_favorite).length > 0 ? (
+
+        {contacts.filter((contact) => contact.is_favorite).length > 0 ? (
           <ContactCategory
             onClick={() => handleCategoryClick("favorites")}
             badgeText={contacts.filter((contact) => contact.is_favorite).length.toString()}
@@ -30,9 +30,9 @@ const ContactNavigation = ({ contacts, activeCategory, handleCategoryClick }: Co
           >
             My Favorites
           </ContactCategory>
-        ) : null }
-        
-        { Object.keys(getContactRoles(contacts)).map((role) => (
+        ) : null}
+
+        {Object.keys(getContactRoles(contacts)).map((role) => (
           <ContactCategory
             onClick={() => handleCategoryClick(role)}
             badgeText={getContactRoles(contacts)[role].count.toString()}
@@ -42,7 +42,7 @@ const ContactNavigation = ({ contacts, activeCategory, handleCategoryClick }: Co
           >
             {role}
           </ContactCategory>
-        )) }
+        ))}
       </ul>
     </nav>
   );

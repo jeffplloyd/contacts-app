@@ -9,12 +9,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
   border: 1px solid var(--button-tertiary-border);
   border-radius: 0.25rem;
   background-color: var(--button-tertiary-background);
   color: var(--button-tertiary-text);
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
   font-size: 0.875rem;
 
   &__icon {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 :root {
   color-scheme: light dark;
@@ -8,7 +8,9 @@
   --text-secondary: light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.5));
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -17,24 +19,26 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   overflow: hidden;
 }
 
 body {
   background-color: var(--application-background);
-  font-family: "Inter", serif;
-  font-optical-sizing: auto;
   font-style: normal;
   font-size: 16px;
   line-height: 1.5;
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
 }
 
 a {
   text-decoration: none;
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 

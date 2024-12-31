@@ -1,14 +1,14 @@
 :root {
   --panel-background: light-dark(#fff, #121212);
   --panel-border: light-dark(#dedede, #181818);
-  --panel-border-radius: 30px
+  --panel-border-radius: 30px;
 }
 
 .panel {
   box-sizing: border-box;
-  background-color: var(--panel-background);
   border: 1px solid var(--panel-border);
   border-radius: var(--panel-border-radius);
+  background-color: var(--panel-background);
 
   &--overflow-hidden {
     overflow: hidden;
@@ -18,4 +18,3 @@
     background-color: transparent;
   }
 }
-

@@ -16,19 +16,19 @@
 
   button {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 0.75rem;
-    padding: 0.625rem 1.75rem 0.625rem 0.625rem;
-    width: 100%;
+    transition: all 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
     border: none;
     border-radius: 55px;
     background-color: transparent;
+    padding: 0.625rem 1.75rem 0.625rem 0.625rem;
+    width: 100%;
     color: var(--contact-text-hover);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
     font-size: 1.25rem;
-    transition: background-color 0.2s ease-in-out;
 
     &:hover {
       background-color: var(--contact-background-hover);
@@ -37,7 +37,7 @@
         opacity: 1;
       }
     }
-    
+
     &[data-active="true"] {
       background-color: var(--contact-background-active);
       color: var(--contact-text-active);
@@ -45,15 +45,15 @@
 
     .contact__info {
       display: flex;
-      align-items: flex-start;
       flex-direction: column;
+      align-items: flex-start;
       gap: 0.5rem;
     }
 
     .contact__icon {
+      transition: transform 0.1s ease-in-out;
       width: 1.25rem;
       height: 1.25rem;
-      transition: transform 0.1s ease-in-out;
 
       &:active {
         transform: scale(1.25);
@@ -61,7 +61,9 @@
 
       &--not-favorite {
         opacity: 0;
-        transition: transform 0.1s ease-in-out, opacity 0.2s ease-in-out;
+        transition:
+          transform 0.1s ease-in-out,
+          opacity 0.2s ease-in-out;
       }
     }
   }

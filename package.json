@@ -17,7 +17,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "concurrently": "^9.1.0"
+  "devDependencies": {
+    "concurrently": "^9.1.1",
+    "prettier": "^3.4.2",
+    "prettier-plugin-css-order": "^2.1.2"
   }
 }

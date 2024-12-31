@@ -13,4 +13,4 @@ const doc = {
 const outputFile = "./swagger-output.json";
 const endpointsFiles = ["./src/index.ts"];
 
-swaggerAutogen({openapi: '3.0.0'})(outputFile, endpointsFiles, doc);
+swaggerAutogen({ openapi: "3.0.0" })(outputFile, endpointsFiles, doc);
