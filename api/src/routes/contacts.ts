@@ -160,6 +160,29 @@ router.put("/:id", async(req: Request, res: Response) => {
   }
 });
 
+router.put("/favorite/:id", async(req: Request, res: Response) => {
+  /*
+    #swagger.tags = ['Contacts']
+    #swagger.summary = 'Update favorite status by id'
+  */
+  try {
+    const id = parseInt(req.params.id, 10);
+    const query = {
+      text: "UPDATE contacts SET is_favorite = NOT is_favorite WHERE id = $1 RETURNING *",
+      values: [id],
+    };
+    const response = await pool.query(query);
+    if (response.rowCount === 0) {
+      res.status(404).send("Contact not found");
+      return;
+    }
+    res.json(response.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
 router.delete("/:id", async(req: Request, res: Response) => {
   /*
     #swagger.tags = ['Contacts']
