@@ -5,6 +5,13 @@ export interface Toast {
   id?: string;
   message: string;
   type: "success" | "info" | "error";
+  timeOut?: number | null;
+  action?: ToastAction;
+}
+
+interface ToastAction {
+  text: string;
+  onClick?: (id?: string) => void;
 }
 
 const ToastContext = createContext({} as ToastContextValue);
@@ -15,9 +22,9 @@ interface ToastProviderProps {
 
 interface ToastContextValue {
   state: Toast[];
-  success: (message: string) => void;
-  info: (message: string) => void;
-  error: (message: string) => void;
+  success: (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => void;
+  info: (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => void;
+  error: (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => void;
   addToast: (toast: Toast) => void;
   removeToast: (id: string) => void;
 }
@@ -30,16 +37,16 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
     dispatch({ type: "ADD_TOAST", payload: toast });
   };
 
-  const success = (message: string) => {
-    addToast({ message, type: "success" });
+  const success = (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => {
+    addToast({ message, type: "success", action, timeOut });
   };
 
-  const info = (message: string) => {
-    addToast({ message, type: "info" });
+  const info = (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => {
+    addToast({ message, type: "info", action, timeOut });
   };
 
-  const error = (message: string) => {
-    addToast({ message, type: "error" });
+  const error = (message: string, timeOut?: Toast["timeOut"], action?: ToastAction) => {
+    addToast({ message, type: "error", action, timeOut });
   };
 
   const removeToast = (id: string) => {
@@ -47,7 +54,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
   };
 
   const value: ToastContextValue = {
-    state,
+    state: state,
     success,
     info,
     error,

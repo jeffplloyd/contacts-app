@@ -1,19 +1,20 @@
 :root {
-  --toast-background: light-dark(rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.6));
+  --toast-background: light-dark(rgba(130, 130, 130, 0.2), rgba(0, 0, 0, 0.8));
   --toast-border: light-dark(#dedede, #181818);
   --toast-border-info: light-dark(rgba(56, 105, 229, 0.75), rgba(56, 105, 229, 0.75));
   --toast-border-success: light-dark(rgba(52, 211, 153, 0.75), rgba(52, 211, 153, 0.75));
-  --toast-border-error: light-dark(rgba(239, 68, 68, 0.75), rgba(239, 68, 68, 0.75));
+  --toast-border-error: light-dark(rgba(255, 63, 76, 0.75), rgba(255, 63, 76, 0.75));
   --toast-border-radius: 8px;
   --toast-text: light-dark(#000, #fff);
+  --toast-text-action: light-dark(#3869e5, #3869e5);
 }
 
 .toast {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   backdrop-filter: saturate(180%) blur(4px);
-  cursor: pointer;
+  animation: pop-in 0.2s ease-in-out;
   border: 3px solid var(--toast-border);
   border-radius: var(--toast-border-radius);
   background-color: var(--toast-background);
@@ -34,6 +35,22 @@
   &--error {
     border-color: var(--toast-border-error);
   }
+
+  &--dismissed {
+    opacity: 0;
+    animation: pop-out 0.2s ease-in-out;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: var(--toast-text);
+    color: var(--toast-text-action);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
 }
 
 .toast-container {
@@ -44,7 +61,33 @@
   row-gap: 0.75rem;
   flex-direction: column-reverse;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 102;
   width: calc(100% - 3rem);
   max-width: 400px;
+}
+
+@keyframes pop-in {
+  from {
+    transform: translateY(1rem);
+    scale: 0.9;
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes pop-out {
+  from {
+    transform: translateY(0);
+    scale: 1;
+    opacity: 1;
+  }
+  to {
+    transform: translateY(1rem);
+    scale: 0.9;
+    opacity: 0;
+  }
 }
