@@ -11,7 +11,7 @@ router.get("/", async (req: Request, res: Response) => {
   */
   try {
     const query = {
-      text: "SELECT * FROM roles",
+      text: "SELECT id, name FROM roles ORDER BY name ASC",
       values: [],
     };
     const response = await pool.query(query);
