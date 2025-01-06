@@ -6,13 +6,20 @@ import Card from "../../components/Card/Card";
 import Avatar from "../../components/Avatar/Avatar";
 import Badge from "../../components/Badge/Badge";
 import Button from "../../components/Button/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ContactDetailsType, getContact } from "../../services/contacts";
+import ActionsMenu from "../../components/ActionsMenu/ActionsMenu";
+import { useDrawer } from "../../hooks/useDrawer";
+import { useToast } from "../../hooks/useToast";
+import ContactForm, { ContactFormRef } from "../../components/Forms/ContactForm";
 
 const ContactDetails = () => {
   const { contactId } = useParams();
   const navigate = useNavigate();
   const [contactData, setContactData] = useState<ContactDetailsType | null>(null);
+  const drawer = useDrawer();
+  const toast = useToast();
+  const contactFormRef = useRef<ContactFormRef>(null);
 
   useEffect(() => {
     if (!contactId) {
@@ -22,8 +29,50 @@ const ContactDetails = () => {
   }, [contactId]);
 
   const fetchContact = async (contactId: number) => {
-    const contact = await getContact(contactId);
-    setContactData(contact);
+    try {
+      const contact = await getContact(contactId);
+      setContactData(contact);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Failed to fetch") {
+        toast.error("Failed to fetch contacts", null, {
+          text: "Retry",
+          onClick: (id?: string) => {
+            fetchContact(Number(contactId));
+            if (id) toast.removeToast(id);
+          },
+        });
+        return;
+      }
+    }
+  };
+
+  const handleEditContact = () => {
+    drawer.setIsOpen(true);
+    drawer.setConfig({
+      headerText: "Edit Contact",
+      actions: (
+        <>
+          <Button
+            variant="tertiary"
+            onClick={() => drawer.setIsOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => contactFormRef.current?.submit()}
+          >
+            Save
+          </Button>
+        </>
+      ),
+      children: (
+        <ContactForm
+          ref={contactFormRef}
+          contact={contactData}
+        />
+      ),
+    });
   };
 
   return (
@@ -35,20 +84,39 @@ const ContactDetails = () => {
         {contactData ? (
           <Card>
             <div className="contact-details__main-info">
-              <div className="contact-details__avatar">
-                <Avatar
-                  size="large"
-                  initals={`${contactData?.fname.charAt(0)}${contactData?.lname.charAt(0)}`}
-                />
-              </div>
-              <div className="contact-details__name">
-                <span>
-                  {contactData?.fname} {contactData?.lname}
-                </span>
-                <div className="contact-details__role">
-                  <Badge>{contactData?.role || "Other"}</Badge>
+              <div className="contact-details__contact-heading">
+                <div className="contact-details__avatar">
+                  <Avatar
+                    size="large"
+                    initals={`${contactData?.fname.charAt(0)}${contactData?.lname.charAt(0)}`}
+                  />
+                </div>
+                <div className="contact-details__name">
+                  <span>
+                    {contactData?.fname} {contactData?.lname}
+                  </span>
+                  <div className="contact-details__role">
+                    <Badge>{contactData?.role || "Other"}</Badge>
+                  </div>
                 </div>
               </div>
+              <ActionsMenu
+                label="Actions"
+                name="contact-actions"
+                items={[
+                  {
+                    text: "Edit",
+                    value: "edit",
+                    onClick: handleEditContact,
+                  },
+                  {
+                    text: "Delete",
+                    value: "delete",
+                    distructive: true,
+                    onClick: () => console.log("delete"),
+                  },
+                ]}
+              />
             </div>
             <div className="contact-details__actions">
               <Button
@@ -148,13 +216,17 @@ const ContactDetails = () => {
             {contactData?.personal_phone ? (
               <Card>
                 <h2>Personal Phone</h2>
-                <p>{contactData?.personal_phone}</p>
+                <p>
+                  <a href={`tel:${contactData?.personal_phone}`}>{contactData?.personal_phone}</a>
+                </p>
               </Card>
             ) : null}
             {contactData?.work_phone ? (
               <Card>
                 <h2>Work Phone</h2>
-                <p>{contactData?.work_phone}</p>
+                <p>
+                  <a href={`tel:${contactData?.work_phone}`}>{contactData?.work_phone}</a>
+                </p>
               </Card>
             ) : null}
           </div>
@@ -165,13 +237,17 @@ const ContactDetails = () => {
             {contactData?.personal_email ? (
               <Card>
                 <h2>Personal Email</h2>
-                <p>{contactData?.personal_email}</p>
+                <p>
+                  <a href={`mailto:${contactData?.personal_email}`}>{contactData?.personal_email}</a>
+                </p>
               </Card>
             ) : null}
             {contactData?.work_email ? (
               <Card>
                 <h2>Work Email</h2>
-                <p>{contactData?.work_email}</p>
+                <p>
+                  <a href={`mailto:${contactData?.work_email}`}>{contactData?.work_email}</a>
+                </p>
               </Card>
             ) : null}
           </div>
@@ -181,7 +257,14 @@ const ContactDetails = () => {
           <div className="contact-details__card-group">
             <Card>
               <h2>Website</h2>
-              <p>{contactData?.website}</p>
+              <p>
+                <a
+                  href={contactData?.website}
+                  target="_blank"
+                >
+                  {contactData?.website}
+                </a>
+              </p>
             </Card>
           </div>
         ) : null}

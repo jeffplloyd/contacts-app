@@ -23,7 +23,8 @@
     position: relative;
   }
 
-  input {
+  input,
+  select {
     display: flex;
     align-items: center;
     transition: border-color 0.2s ease-in-out;
@@ -35,7 +36,11 @@
     height: 3.5rem;
     color: var(--input-text);
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 1rem;
+
+    @media screen and (min-width: 768px) {
+      font-size: 0.875rem;
+    }
 
     &[type="search"] {
       padding-left: 3rem;

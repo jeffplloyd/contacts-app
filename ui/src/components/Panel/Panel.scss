@@ -7,8 +7,19 @@
 .panel {
   box-sizing: border-box;
   border: 1px solid var(--panel-border);
-  border-radius: var(--panel-border-radius);
   background-color: var(--panel-background);
+
+  &--border-radius-full {
+    border-radius: var(--panel-border-radius);
+  }
+
+  &--border-radius-top {
+    border-radius: var(--panel-border-radius) var(--panel-border-radius) 0 0;
+  }
+
+  &--border-radius-bottom {
+    border-radius: 0 0 var(--panel-border-radius) var(--panel-border-radius);
+  }
 
   &--overflow-hidden {
     overflow: hidden;

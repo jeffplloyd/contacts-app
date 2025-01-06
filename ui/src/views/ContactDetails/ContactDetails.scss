@@ -33,14 +33,25 @@
 
     p {
       font-size: 1.25rem;
+
+      a {
+        color: var(--text-primary);
+      }
     }
   }
 
   &__main-info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
+  }
+
+  &__contact-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   &__name {

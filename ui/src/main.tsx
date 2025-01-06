@@ -5,6 +5,7 @@ import "./index.scss";
 import App from "./App.tsx";
 import { fitToViewport } from "./utils/dom.ts";
 import { ToastProvider } from "./contexts/ToastContext";
+import { DrawerProvider } from "./contexts/DrawerContext.tsx";
 
 fitToViewport();
 
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Router>
       <ToastProvider>
-        <App />
+        <DrawerProvider>
+          <App />
+        </DrawerProvider>
       </ToastProvider>
     </Router>
   </StrictMode>

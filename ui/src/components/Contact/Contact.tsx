@@ -22,7 +22,7 @@ const Contact = ({ active, contact, onClick, onFavorite }: ContactProps) => {
     if (findParentElement(event.target as HTMLElement)) {
       setIsFavorite(!isFavorite);
       if (onFavorite && contact.id) onFavorite(contact.id);
-      toast.info(isFavorite ? "Removed from favorites" : "Added to favorites");
+      toast.info(isFavorite ? "Removed from favorites" : "Added to favorites", 5000, { text: "Dismiss" });
       return;
     }
     if (onClick && contact.id) onClick(contact.id);

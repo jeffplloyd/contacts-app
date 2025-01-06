@@ -1,18 +1,25 @@
 import { useState } from "react";
 import "./FormField.scss";
+import { format, useMask } from "@react-input/mask";
 
 interface FormFieldProps {
   label: string;
   compact?: boolean;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  type: "text" | "email" | "password" | "search";
+  type: "text" | "email" | "password" | "search" | "tel" | "url";
   placeholder?: string;
   name: string;
   invalid?: boolean;
   disabled?: boolean;
   helperText?: React.ReactNode;
 }
+
+const maskOptions = {
+  mask: "(___) ___-____",
+  replacement: { _: /\d/ },
+  showMask: true,
+};
 
 const FormField = ({
   label,
@@ -27,6 +34,7 @@ const FormField = ({
   helperText,
 }: FormFieldProps) => {
   const [inputValue, setInputValue] = useState(value);
+  const inputRef = useMask(maskOptions);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -38,12 +46,13 @@ const FormField = ({
       {!compact ? <label htmlFor={name}>{label}</label> : null}
       <div className="form-field__input">
         <input
+          ref={type === "tel" ? inputRef : null}
           aria-label={compact ? label : undefined}
           aria-describedby={helperText ? `${name}Helper` : undefined}
           type={type}
           name={name}
           id={name}
-          value={inputValue}
+          value={type === "tel" ? format(inputValue, maskOptions) : inputValue}
           onInput={handleInputChange}
           placeholder={placeholder}
           disabled={disabled}

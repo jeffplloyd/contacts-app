@@ -9,6 +9,9 @@ import ContactNavigation from "./components/ContactNavigation/ContactNavigation"
 import { ContactType, getContactRoles, getContacts, updateFavorite } from "./services/contacts";
 import AppRouter from "./components/AppRouter";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "./hooks/useToast";
+import { useDrawer } from "./hooks/useDrawer";
+import ContactForm, { ContactFormRef } from "./components/Forms/ContactForm";
 
 function App() {
   const [contacts, setContacts] = useState<ContactType[]>([]);
@@ -20,6 +23,9 @@ function App() {
   const hasFetched = useRef(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const toast = useToast();
+  const drawer = useDrawer();
+  const contactFormRef = useRef<ContactFormRef>(null);
 
   useEffect(() => {
     if (hasFetched.current) {
@@ -66,8 +72,21 @@ function App() {
   }, [searchQuery, contacts, activeCategory]);
 
   const fetchContacts = async () => {
-    const contacts = await getContacts();
-    setContacts(contacts);
+    try {
+      const contacts = await getContacts();
+      setContacts(contacts);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Failed to fetch") {
+        toast.error("Failed to fetch contacts", null, {
+          text: "Retry",
+          onClick: (id?: string) => {
+            fetchContacts();
+            if (id) toast.removeToast(id);
+          },
+        });
+        return;
+      }
+    }
   };
 
   const groupedContacts = (contacts: ContactType[]) => {
@@ -80,6 +99,38 @@ function App() {
       return acc;
     }, {});
     return grouped;
+  };
+
+  const addContact = () => {
+    drawer.setConfig({
+      headerText: "Add a Contact",
+      position: "left",
+      actions: (
+        <>
+          <Button
+            variant="tertiary"
+            onClick={() => drawer.setIsOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => contactFormRef.current?.submit()}
+          >
+            Save
+          </Button>
+        </>
+      ),
+      children: <ContactForm ref={contactFormRef} />,
+    });
+    drawer.setIsOpen(true);
+  };
+
+  const handleNewContactClick = () => {
+    addContact();
+    if (showSidebar) {
+      setShowSidebar(false);
+    }
   };
 
   const handleCategoryClick = (category: string) => {
@@ -143,6 +194,7 @@ function App() {
                   />
                 </svg>
               }
+              onClick={handleNewContactClick}
             >
               New Contact
             </Button>
@@ -162,6 +214,7 @@ function App() {
                 className="content__header__action"
                 type="button"
                 aria-label="New Contact"
+                onClick={handleNewContactClick}
               >
                 <svg
                   width="20"
