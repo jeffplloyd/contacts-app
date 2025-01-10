@@ -117,6 +117,8 @@ router.post("/", async (req: Request, res: Response) => {
     const body = {
       ...req.body,
       dob: new Date(req.body.dob),
+      created_at: req.body.created_at ? new Date(req.body.created_at) : new Date(),
+      updated_at: req.body.updated_at ? new Date(req.body.updated_at) : new Date(),
     };
     const result = Contact.safeParse(body);
     if (!result.success) {
@@ -128,7 +130,19 @@ router.post("/", async (req: Request, res: Response) => {
       res.status(400).send("Contact already exists");
       return;
     }
-    const { fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, role_id } = body;
+    const {
+      fname,
+      lname,
+      dob,
+      website,
+      personal_email,
+      personal_phone,
+      work_email,
+      work_phone,
+      role_id,
+      created_at,
+      updated_at,
+    } = body;
     const query = {
       text: "INSERT INTO contacts (fname, lname, dob, website, personal_email, personal_phone, work_email, work_phone, role_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
       values: [
@@ -141,6 +155,8 @@ router.post("/", async (req: Request, res: Response) => {
         sanitizedInput(work_email),
         sanitizedInput(work_phone),
         role_id,
+        sanitizedInput(created_at.toISOString().split("T")[0]),
+        sanitizedInput(updated_at.toISOString().split("T")[0]),
       ],
     };
     const response = await pool.query(query);

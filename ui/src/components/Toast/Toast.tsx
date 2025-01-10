@@ -40,7 +40,6 @@ const Toast = ({ id, message, type, action, timeOut }: ToastProps) => {
   }, []);
 
   const dismissToast = () => {
-    console.log("Removing toast", id);
     if (id) removeToast(id);
   };
 
@@ -64,9 +63,9 @@ const Toast = ({ id, message, type, action, timeOut }: ToastProps) => {
 const ToastContainer = ({ toasts }: ToastContainerProps) => {
   return (
     <div className="toast-container">
-      {toasts?.map((toast, id) => (
+      {toasts?.map((toast) => (
         <Toast
-          key={id}
+          key={toast.id}
           id={toast.id}
           message={toast.message}
           type={toast.type}

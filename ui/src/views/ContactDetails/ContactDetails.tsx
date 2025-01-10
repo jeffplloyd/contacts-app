@@ -113,9 +113,11 @@ const ContactDetails = ({ onContactDeleted }: { onContactDeleted?: () => void })
       const contact = await createContact(newData);
       if (onContactDeleted) onContactDeleted();
       if (contact) {
-        toast.info("Contact restored", 5000, {
-          text: "Dismiss",
-        });
+        setTimeout(() => {
+          toast.info("Contact restored", 5000, {
+            text: "Dismiss",
+          });
+        }, 200);
       }
     } catch (error) {
       if (error instanceof Error) {
