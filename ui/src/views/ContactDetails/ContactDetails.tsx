@@ -7,13 +7,13 @@ import Avatar from "../../components/Avatar/Avatar";
 import Badge from "../../components/Badge/Badge";
 import Button from "../../components/Button/Button";
 import { useEffect, useRef, useState } from "react";
-import { ContactDetailsType, getContact } from "../../services/contacts";
+import { ContactDetailsType, createContact, deleteContact, getContact } from "../../services/contacts";
 import ActionsMenu from "../../components/ActionsMenu/ActionsMenu";
 import { useDrawer } from "../../hooks/useDrawer";
 import { useToast } from "../../hooks/useToast";
 import ContactForm, { ContactFormRef } from "../../components/Forms/ContactForm";
 
-const ContactDetails = () => {
+const ContactDetails = ({ onContactDeleted }: { onContactDeleted?: () => void }) => {
   const { contactId } = useParams();
   const navigate = useNavigate();
   const [contactData, setContactData] = useState<ContactDetailsType | null>(null);
@@ -38,6 +38,33 @@ const ContactDetails = () => {
           text: "Retry",
           onClick: (id?: string) => {
             fetchContact(Number(contactId));
+            if (id) toast.removeToast(id);
+          },
+        });
+        return;
+      }
+    }
+  };
+
+  const handleDeleteContact = async () => {
+    if (!contactData?.id) return;
+
+    try {
+      const deletedContact = await deleteContact(contactData.id);
+      if (onContactDeleted) onContactDeleted();
+      if (deletedContact) {
+        toast.info("Contact deleted", 5000, {
+          text: "UNDO",
+          onClick: () => handleUndoDelete(deletedContact),
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Failed to delete contact", null, {
+          text: "Retry",
+          onClick: (id?: string) => {
+            handleDeleteContact();
             if (id) toast.removeToast(id);
           },
         });
@@ -73,6 +100,31 @@ const ContactDetails = () => {
         />
       ),
     });
+  };
+
+  const handleUndoDelete = async (deletedContact: ContactDetailsType) => {
+    const newData: ContactDetailsType = {
+      ...deletedContact,
+      created_at: deletedContact.created_at ? new Date(deletedContact.created_at) : new Date(),
+      updated_at: deletedContact.updated_at ? new Date(deletedContact.updated_at) : new Date(),
+    };
+    delete newData.id;
+    try {
+      const contact = await createContact(newData);
+      if (onContactDeleted) onContactDeleted();
+      if (contact) {
+        toast.info("Contact restored", 5000, {
+          text: "Dismiss",
+        });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Failed to restore contact", null, {
+          text: "Dismiss",
+        });
+        return;
+      }
+    }
   };
 
   return (
@@ -113,7 +165,7 @@ const ContactDetails = () => {
                     text: "Delete",
                     value: "delete",
                     distructive: true,
-                    onClick: () => console.log("delete"),
+                    onClick: handleDeleteContact,
                   },
                 ]}
               />

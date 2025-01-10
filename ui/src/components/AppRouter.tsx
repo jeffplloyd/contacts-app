@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ContactDetails from "../views/ContactDetails/ContactDetails";
 
-const AppRouter = () => {
+const AppRouter = ({ onContactDeleted }: { onContactDeleted?: () => void }) => {
   return (
     <Routes>
       <Route
@@ -10,7 +10,7 @@ const AppRouter = () => {
       />
       <Route
         path="contact/:contactId"
-        element={<ContactDetails />}
+        element={<ContactDetails onContactDeleted={onContactDeleted} />}
       />
     </Routes>
   );

@@ -21,7 +21,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const hasFetched = useRef(false);
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
   const drawer = useDrawer();
@@ -38,6 +38,14 @@ function App() {
   useEffect(() => {
     setFilteredContacts(contacts);
   }, [contacts]);
+
+  useEffect(() => {
+    if (state?.message === "Contact deleted") {
+      console.log("location.state", state);
+      state.message = null;
+      // fetchContacts();
+    }
+  }, [state]);
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -289,7 +297,7 @@ function App() {
                         active={pathname === `/contact/${contact.id}`}
                         contact={contact}
                         key={contact.id}
-                        onClick={() => navigate(`/contact/${contact.id}`)}
+                        onClick={() => navigate(`/contact/${contact.id}`, { state: null })}
                         onFavorite={handleFavorite}
                       />
                     ))}
@@ -324,7 +332,7 @@ function App() {
         className="contact-details"
         data-show={pathname.includes("contact")}
       >
-        <AppRouter />
+        <AppRouter onContactDeleted={() => fetchContacts()} />
       </div>
     </main>
   );
