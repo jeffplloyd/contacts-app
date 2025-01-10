@@ -6,6 +6,7 @@ import SelectField from "../SelectField/SelectField";
 import { getRoles } from "../../services/roles";
 import { useToast } from "../../hooks/useToast";
 import { ContactDetailsType } from "../../services/contacts";
+import { contactFormSchema } from "./utils";
 
 interface ContactFormProps {
   contact?: ContactDetailsType | null;
@@ -18,6 +19,12 @@ interface RoleOption {
 
 export type ContactFormRef = {
   submit: () => void;
+};
+
+const dateFormatOptions: Intl.DateTimeFormatOptions = {
+  month: "2-digit",
+  day: "2-digit",
+  year: "numeric",
 };
 
 const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, ref) => {
@@ -34,10 +41,13 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
       personal_phone: contact?.personal_phone || "",
       work_phone: contact?.work_phone || "",
       website: contact?.website || "",
+      dob: contact?.dob ? new Date(contact.dob).toLocaleDateString("en", dateFormatOptions) : "",
     },
+    validationSchema: contactFormSchema,
     onSubmit: (values) => {
-      console.log(values);
+      console.log("onSubmit", values);
     },
+    validateOnChange: false,
   });
 
   useImperativeHandle(ref, () => ({
@@ -51,6 +61,11 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
     hasFetched.current = true;
     fetchRoles();
   }, []);
+
+  useEffect(() => {
+    if (formik.isValid) return;
+    toast.error("Form validation errors", 5000, { text: "Dismiss" });
+  }, [formik.errors]);
 
   const fetchRoles = async () => {
     try {
@@ -80,6 +95,12 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
           name="firstName"
           value={formik.values.firstName}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.firstName}
+          helperText={
+            formik.errors.firstName ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.firstName}</span>
+            ) : null
+          }
         />
         <FormField
           label="Last Name"
@@ -87,6 +108,12 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
           name="lastName"
           value={formik.values.lastName}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.lastName}
+          helperText={
+            formik.errors.lastName ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.lastName}</span>
+            ) : null
+          }
         />
         <SelectField
           label="Company Role"
@@ -95,46 +122,100 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
           value={formik.values.role}
           onChange={formik.handleChange}
           options={roles}
+          invalid={!!formik.errors.role}
+          helperText={
+            formik.errors.role ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.role}</span>
+            ) : null
+          }
         />
       </fieldset>
       <fieldset>
         <FormField
           label="Personal Phone"
           type="tel"
-          name="personalPhone"
+          name="personal_phone"
           value={formik.values.personal_phone}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.personal_phone}
+          helperText={
+            formik.errors.personal_phone ? (
+              <span className="form-field__helper-text form-field__helper-text--error">
+                {formik.errors.personal_phone}
+              </span>
+            ) : null
+          }
         />
         <FormField
           label="Work Phone"
           type="tel"
-          name="workPhone"
+          name="work_phone"
           value={formik.values.work_phone}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.work_phone}
+          helperText={
+            formik.errors.work_phone ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.work_phone}</span>
+            ) : null
+          }
         />
       </fieldset>
       <fieldset>
         <FormField
           label="Personal Email"
           type="email"
-          name="personalemail"
+          name="personal_email"
           value={formik.values.personal_email}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.personal_email}
+          helperText={
+            formik.errors.personal_email ? (
+              <span className="form-field__helper-text form-field__helper-text--error">
+                {formik.errors.personal_email}
+              </span>
+            ) : null
+          }
         />
         <FormField
           label="Work Email"
           type="email"
-          name="workEmail"
+          name="work_email"
           value={formik.values.work_email}
           onChange={formik.handleChange}
+          invalid={!!formik.errors.work_email}
+          helperText={
+            formik.errors.work_email ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.work_email}</span>
+            ) : null
+          }
         />
       </fieldset>
       <FormField
         label="Website"
         type="text"
-        name="webSite"
+        name="website"
         value={formik.values.website}
         onChange={formik.handleChange}
+        invalid={!!formik.errors.website}
+        helperText={
+          formik.errors.website ? (
+            <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.website}</span>
+          ) : null
+        }
+      />
+      <FormField
+        label="Birthday"
+        type="date"
+        name="dob"
+        placeholder="MM/DD/YYYY"
+        value={formik.values.dob}
+        onChange={formik.handleChange}
+        invalid={!!formik.errors.dob}
+        helperText={
+          formik.errors.dob ? (
+            <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.dob}</span>
+          ) : null
+        }
       />
     </form>
   );

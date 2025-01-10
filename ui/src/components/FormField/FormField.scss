@@ -59,11 +59,31 @@
     }
   }
 
+  &--invalid {
+    input,
+    select {
+      border-color: light-dark(#ff3f4c, #ff3f4c);
+    }
+  }
+
   &__accessory {
     position: absolute;
     top: 50%;
     left: 1.25rem;
     transform: translate(0, -50%);
     margin-top: 0.25rem;
+  }
+
+  &__helper {
+    margin: 0.25rem 0;
+  }
+
+  &__helper-text {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+
+    &--error {
+      color: light-dark(#ff3f4c, #ff3f4c);
+    }
   }
 }

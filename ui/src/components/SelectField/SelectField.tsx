@@ -35,7 +35,7 @@ const SelectField = ({
   };
 
   return (
-    <div className="form-field">
+    <div className={`form-field ${invalid ? "form-field--invalid" : ""}`}>
       {!compact ? <label htmlFor={name}>{label}</label> : null}
       <div className="form-field__input">
         <select

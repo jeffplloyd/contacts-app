@@ -7,7 +7,7 @@ interface FormFieldProps {
   compact?: boolean;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  type: "text" | "email" | "password" | "search" | "tel" | "url";
+  type: "text" | "email" | "password" | "search" | "tel" | "url" | "date";
   placeholder?: string;
   name: string;
   invalid?: boolean;
@@ -15,10 +15,16 @@ interface FormFieldProps {
   helperText?: React.ReactNode;
 }
 
-const maskOptions = {
-  mask: "(___) ___-____",
-  replacement: { _: /\d/ },
-  showMask: true,
+interface Replacement {
+  [key: string]: RegExp;
+}
+
+const maskOptions = (type: string) => {
+  return {
+    mask: type === "date" ? "mm/dd/yyyy" : "(___) ___-____",
+    replacement: type === "date" ? ({ d: /\d/, m: /\d/, y: /\d/ } as Replacement) : ({ _: /\d/ } as Replacement),
+    showMask: true,
+  };
 };
 
 const FormField = ({
@@ -34,7 +40,7 @@ const FormField = ({
   helperText,
 }: FormFieldProps) => {
   const [inputValue, setInputValue] = useState(value);
-  const inputRef = useMask(maskOptions);
+  const inputRef = useMask(maskOptions(type));
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -42,17 +48,17 @@ const FormField = ({
   };
 
   return (
-    <div className="form-field">
+    <div className={`form-field ${invalid ? "form-field--invalid" : ""}`}>
       {!compact ? <label htmlFor={name}>{label}</label> : null}
       <div className="form-field__input">
         <input
-          ref={type === "tel" ? inputRef : null}
+          ref={["tel", "date"].includes(type) ? inputRef : null}
           aria-label={compact ? label : undefined}
           aria-describedby={helperText ? `${name}Helper` : undefined}
-          type={type}
+          type={type === "date" ? "text" : type}
           name={name}
           id={name}
-          value={type === "tel" ? format(inputValue, maskOptions) : inputValue}
+          value={["tel", "date"].includes(type) ? format(inputValue, maskOptions(type)) : inputValue}
           onInput={handleInputChange}
           placeholder={placeholder}
           disabled={disabled}
