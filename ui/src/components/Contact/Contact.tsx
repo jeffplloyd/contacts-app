@@ -3,7 +3,7 @@ import { Contact as CostactSchema } from "schema";
 import "./Contact.scss";
 import Badge from "../Badge/Badge";
 import Avatar from "../Avatar/Avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../../hooks/useToast";
 
 type ContactType = z.infer<typeof CostactSchema>;
@@ -17,6 +17,10 @@ interface ContactProps {
 const Contact = ({ active, contact, onClick, onFavorite }: ContactProps) => {
   const [isFavorite, setIsFavorite] = useState(contact.is_favorite);
   const toast = useToast();
+
+  useEffect(() => {
+    setIsFavorite(contact.is_favorite);
+  }, [contact]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (findParentElement(event.target as HTMLElement)) {

@@ -7,7 +7,7 @@ interface ButtonProps {
   rounded?: boolean;
   fullWidth?: boolean;
   iconOnly?: boolean;
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: "primary" | "secondary" | "tertiary" | "distructive";
   disabled?: boolean;
   onClick?: () => void;
 }

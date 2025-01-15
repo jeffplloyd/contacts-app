@@ -4,9 +4,9 @@
     column-gap: 0.75rem;
     row-gap: 1.25rem;
     flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--panel-border);
-    padding: 1.5rem 1rem 1rem 1rem;
+    padding: 0.75rem 1rem 0rem 0.25rem;
   }
 
   &__content {
@@ -17,6 +17,10 @@
     height: calc(100vh - 93px);
     height: calc((var(--vh, 1vh) * 100) - 93px);
     overflow: auto;
+
+    @media screen and (min-width: 768px) {
+      height: calc(100vh - 32px);
+    }
   }
 
   &__card-group {
@@ -68,6 +72,7 @@
   &__actions {
     display: flex;
     flex-wrap: nowrap;
+    justify-content: space-evenly;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: -0.75rem;
@@ -80,5 +85,18 @@
       width: 0;
       height: 0;
     }
+  }
+}
+
+.edit-contact-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  &__right {
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: center;
   }
 }

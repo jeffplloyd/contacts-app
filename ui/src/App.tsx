@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.scss";
 import Panel from "./components/Panel/Panel";
-import BackButton from "./components/BackButton/BackButton";
 import Contact from "./components/Contact/Contact";
 import Button from "./components/Button/Button";
 import FormField from "./components/FormField/FormField";
@@ -12,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "./hooks/useToast";
 import { useDrawer } from "./hooks/useDrawer";
 import ContactForm, { ContactFormRef } from "./components/Forms/ContactForm";
+import useViewportSize from "./hooks/useViewportSize";
 
 function App() {
   const [contacts, setContacts] = useState<ContactType[]>([]);
@@ -21,31 +21,27 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const hasFetched = useRef(false);
-  const { pathname, state } = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
   const drawer = useDrawer();
   const contactFormRef = useRef<ContactFormRef>(null);
+  const screenSize = useViewportSize();
 
   useEffect(() => {
     if (hasFetched.current) {
       return;
     }
-    hasFetched.current = true;
     fetchContacts();
+
+    return () => {
+      hasFetched.current = true;
+    };
   }, []);
 
   useEffect(() => {
     setFilteredContacts(contacts);
   }, [contacts]);
-
-  useEffect(() => {
-    if (state?.message === "Contact deleted") {
-      console.log("location.state", state);
-      state.message = null;
-      // fetchContacts();
-    }
-  }, [state]);
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -81,8 +77,11 @@ function App() {
 
   const fetchContacts = async () => {
     try {
-      const contacts = await getContacts();
-      setContacts(contacts);
+      const contactsData = await getContacts();
+      setContacts(contactsData);
+      if (contacts.length === 0 && !(window.innerWidth < 1200)) {
+        navigate(`/contact/${contactsData[0].id}`, { replace: true });
+      }
     } catch (error) {
       if (error instanceof Error && error.message === "Failed to fetch") {
         toast.error("Failed to fetch contacts", null, {
@@ -180,6 +179,31 @@ function App() {
         data-show={showSidebar}
       >
         <Panel>
+          {screenSize === "sm" ? (
+            <div className="sidebar__header">
+              <h2>Categories</h2>
+              <Button
+                variant="tertiary"
+                iconOnly
+                rounded
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.7812 4.28125L9.03125 8.03125L12.75 11.75C13.0625 12.0312 13.0625 12.5 12.75 12.7812C12.4688 13.0938 12 13.0938 11.7188 12.7812L7.96875 9.0625L4.25 12.7812C3.96875 13.0938 3.5 13.0938 3.21875 12.7812C2.90625 12.5 2.90625 12.0312 3.21875 11.7188L6.9375 8L3.21875 4.28125C2.90625 4 2.90625 3.53125 3.21875 3.21875C3.5 2.9375 3.96875 2.9375 4.28125 3.21875L8 6.96875L11.7188 3.25C12 2.9375 12.4688 2.9375 12.7812 3.25C13.0625 3.53125 13.0625 4 12.7812 4.28125Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+                onClick={() => setShowSidebar(false)}
+              />
+            </div>
+          ) : null}
           <div className="split-layout">
             <ContactNavigation
               contacts={contacts}
@@ -216,83 +240,108 @@ function App() {
       >
         <Panel overflowHidden={true}>
           <div className="content__header">
-            <div className="mobile-only">
-              <BackButton onClick={() => setShowSidebar(!showSidebar)}>Categories</BackButton>
-              <button
-                className="content__header__action"
-                type="button"
-                aria-label="New Contact"
-                onClick={handleNewContactClick}
-              >
-                <svg
-                  width="20"
-                  height="16"
-                  viewBox="0 0 20 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+            {screenSize === "sm" ? (
+              <div className="mobile-only">
+                <Button
+                  variant="tertiary"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 3C1 2.46875 1.4375 2 2 2H14C14.5312 2 15 2.46875 15 3C15 3.5625 14.5312 4 14 4H2C1.4375 4 1 3.5625 1 3ZM1 8C1 7.46875 1.4375 7 2 7H14C14.5312 7 15 7.46875 15 8C15 8.5625 14.5312 9 14 9H2C1.4375 9 1 8.5625 1 8ZM15 13C15 13.5625 14.5312 14 14 14H2C1.4375 14 1 13.5625 1 13C1 12.4688 1.4375 12 2 12H14C14.5312 12 15 12.4688 15 13Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  }
+                  onClick={() => setShowSidebar(!showSidebar)}
                 >
-                  <path
-                    d="M7 1.5C6.09375 1.5 5.28125 2 4.8125 2.75C4.375 3.53125 4.375 4.5 4.8125 5.25C5.28125 6.03125 6.09375 6.5 7 6.5C7.875 6.5 8.6875 6.03125 9.15625 5.25C9.59375 4.5 9.59375 3.53125 9.15625 2.75C8.6875 2 7.875 1.5 7 1.5ZM7 8C5.5625 8 4.25 7.25 3.53125 6C2.8125 4.78125 2.8125 3.25 3.53125 2C4.25 0.78125 5.5625 0 7 0C8.40625 0 9.71875 0.78125 10.4375 2C11.1562 3.25 11.1562 4.78125 10.4375 6C9.71875 7.25 8.40625 8 7 8ZM5.5625 11C3.5 11 1.8125 12.5312 1.53125 14.5H12.4375C12.1562 12.5312 10.4688 11 8.40625 11H5.5625ZM5.5625 9.5H8.40625C11.5 9.5 14 12 14 15.0938C14 15.5938 13.5625 16 13.0625 16H0.90625C0.40625 16 0 15.5938 0 15.0938C0 12 2.46875 9.5 5.5625 9.5ZM15.75 9.75V7.75H13.75C13.3125 7.75 13 7.4375 13 7C13 6.59375 13.3125 6.25 13.75 6.25H15.75V4.25C15.75 3.84375 16.0625 3.5 16.5 3.5C16.9062 3.5 17.25 3.84375 17.25 4.25V6.25H19.25C19.6562 6.25 20 6.59375 20 7C20 7.4375 19.6562 7.75 19.25 7.75H17.25V9.75C17.25 10.1875 16.9062 10.5 16.5 10.5C16.0625 10.5 15.75 10.1875 15.75 9.75Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="content__header__search">
-              <FormField
-                compact
-                label="Search"
-                type="search"
-                name="search"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search"
+                  Categories
+                </Button>
+                <Button
+                  label="New Contact"
+                  variant="primary"
+                  rounded={true}
+                  iconOnly={true}
+                  icon={
+                    <svg
+                      width="20"
+                      height="16"
+                      viewBox="0 0 20 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7 1.5C6.09375 1.5 5.28125 2 4.8125 2.75C4.375 3.53125 4.375 4.5 4.8125 5.25C5.28125 6.03125 6.09375 6.5 7 6.5C7.875 6.5 8.6875 6.03125 9.15625 5.25C9.59375 4.5 9.59375 3.53125 9.15625 2.75C8.6875 2 7.875 1.5 7 1.5ZM7 8C5.5625 8 4.25 7.25 3.53125 6C2.8125 4.78125 2.8125 3.25 3.53125 2C4.25 0.78125 5.5625 0 7 0C8.40625 0 9.71875 0.78125 10.4375 2C11.1562 3.25 11.1562 4.78125 10.4375 6C9.71875 7.25 8.40625 8 7 8ZM5.5625 11C3.5 11 1.8125 12.5312 1.53125 14.5H12.4375C12.1562 12.5312 10.4688 11 8.40625 11H5.5625ZM5.5625 9.5H8.40625C11.5 9.5 14 12 14 15.0938C14 15.5938 13.5625 16 13.0625 16H0.90625C0.40625 16 0 15.5938 0 15.0938C0 12 2.46875 9.5 5.5625 9.5ZM15.75 9.75V7.75H13.75C13.3125 7.75 13 7.4375 13 7C13 6.59375 13.3125 6.25 13.75 6.25H15.75V4.25C15.75 3.84375 16.0625 3.5 16.5 3.5C16.9062 3.5 17.25 3.84375 17.25 4.25V6.25H19.25C19.6562 6.25 20 6.59375 20 7C20 7.4375 19.6562 7.75 19.25 7.75H17.25V9.75C17.25 10.1875 16.9062 10.5 16.5 10.5C16.0625 10.5 15.75 10.1875 15.75 9.75Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  }
+                  onClick={handleNewContactClick}
+                />
+              </div>
+            ) : null}
+            <div className="content__header__filter-bar">
+              <div className="content__header__search">
+                <FormField
+                  compact
+                  label="Search"
+                  type="search"
+                  name="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search"
+                />
+              </div>
+              <Button
+                variant="secondary"
+                rounded={true}
+                icon={
+                  <>
+                    {sortDirection === "asc" ? (
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 1C12.2812 1 12.5312 1.1875 12.6562 1.4375L15.1562 6.4375C15.3438 6.8125 15.1875 7.25 14.8125 7.4375C14.4688 7.625 14 7.46875 13.8125 7.09375L13.4062 6.25C13.3438 6.25 13.2812 6.28125 13.25 6.28125H10.5625L10.1562 7.09375C9.96875 7.46875 9.53125 7.625 9.15625 7.4375C8.78125 7.25 8.625 6.8125 8.8125 6.4375L11.3125 1.4375C11.4375 1.1875 11.6875 1 12 1ZM11.3125 4.75H12.6562L12 3.4375L11.3125 4.75ZM3.46875 1.21875C3.75 0.9375 4.21875 0.9375 4.5 1.21875L7.5 4.21875C7.8125 4.53125 7.8125 5 7.5 5.28125C7.21875 5.59375 6.75 5.59375 6.46875 5.28125L4.75 3.5625V14.25C4.75 14.6875 4.40625 15 4 15C3.5625 15 3.25 14.6875 3.25 14.25V3.5625L1.53125 5.28125C1.21875 5.59375 0.75 5.59375 0.46875 5.28125C0.15625 5 0.15625 4.53125 0.46875 4.25L3.46875 1.25V1.21875ZM10 9H14C14.2812 9 14.5625 9.1875 14.6562 9.46875C14.7812 9.71875 14.75 10.0312 14.5312 10.25L11.6562 13.5H14C14.4062 13.5 14.75 13.8438 14.75 14.25C14.75 14.6875 14.4062 15 14 15H10C9.6875 15 9.4375 14.8438 9.3125 14.5625C9.1875 14.3125 9.21875 14 9.4375 13.75L12.3125 10.5H10C9.5625 10.5 9.25 10.1875 9.25 9.75C9.25 9.34375 9.5625 9 10 9Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0.46875 11.7812C0.15625 11.5 0.15625 11.0312 0.46875 10.7188C0.75 10.4375 1.21875 10.4375 1.53125 10.7188L3.25 12.4688V1.75C3.25 1.34375 3.5625 1 4 1C4.40625 1 4.75 1.34375 4.75 1.75V12.4688L6.46875 10.75C6.75 10.4375 7.21875 10.4375 7.5 10.75C7.8125 11.0312 7.8125 11.5 7.5 11.7812L4.5 14.7812C4.21875 15.0938 3.75 15.0938 3.46875 14.7812L0.46875 11.7812ZM10 1H14C14.2812 1 14.5625 1.1875 14.6562 1.46875C14.7812 1.71875 14.75 2.03125 14.5312 2.25L11.6562 5.5H14C14.4062 5.5 14.75 5.84375 14.75 6.25C14.75 6.6875 14.4062 7 14 7H10C9.6875 7 9.40625 6.84375 9.3125 6.5625C9.1875 6.3125 9.21875 6 9.4375 5.78125L12.3125 2.5H10C9.5625 2.5 9.25 2.1875 9.25 1.75C9.25 1.34375 9.5625 1 10 1ZM12 8.5H11.9688C12.2812 8.5 12.5312 8.6875 12.6562 8.9375L15.1562 13.9375C15.3438 14.3125 15.1875 14.75 14.8125 14.9375C14.4375 15.125 14 14.9688 13.8125 14.5938L13.375 13.75C13.3438 13.75 13.2812 13.75 13.25 13.75H10.5625L10.1562 14.5938C9.96875 14.9688 9.53125 15.125 9.15625 14.9375C8.78125 14.75 8.625 14.3125 8.8125 13.9375L11.3125 8.9375C11.4375 8.6875 11.6875 8.5 12 8.5ZM11.3125 12.25H12.6562L12 10.9375L11.3125 12.25Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    )}
+                  </>
+                }
+                onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
               />
             </div>
-            <Button
-              variant="secondary"
-              rounded={true}
-              icon={
-                <>
-                  {sortDirection === "asc" ? (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12 1C12.2812 1 12.5312 1.1875 12.6562 1.4375L15.1562 6.4375C15.3438 6.8125 15.1875 7.25 14.8125 7.4375C14.4688 7.625 14 7.46875 13.8125 7.09375L13.4062 6.25C13.3438 6.25 13.2812 6.28125 13.25 6.28125H10.5625L10.1562 7.09375C9.96875 7.46875 9.53125 7.625 9.15625 7.4375C8.78125 7.25 8.625 6.8125 8.8125 6.4375L11.3125 1.4375C11.4375 1.1875 11.6875 1 12 1ZM11.3125 4.75H12.6562L12 3.4375L11.3125 4.75ZM3.46875 1.21875C3.75 0.9375 4.21875 0.9375 4.5 1.21875L7.5 4.21875C7.8125 4.53125 7.8125 5 7.5 5.28125C7.21875 5.59375 6.75 5.59375 6.46875 5.28125L4.75 3.5625V14.25C4.75 14.6875 4.40625 15 4 15C3.5625 15 3.25 14.6875 3.25 14.25V3.5625L1.53125 5.28125C1.21875 5.59375 0.75 5.59375 0.46875 5.28125C0.15625 5 0.15625 4.53125 0.46875 4.25L3.46875 1.25V1.21875ZM10 9H14C14.2812 9 14.5625 9.1875 14.6562 9.46875C14.7812 9.71875 14.75 10.0312 14.5312 10.25L11.6562 13.5H14C14.4062 13.5 14.75 13.8438 14.75 14.25C14.75 14.6875 14.4062 15 14 15H10C9.6875 15 9.4375 14.8438 9.3125 14.5625C9.1875 14.3125 9.21875 14 9.4375 13.75L12.3125 10.5H10C9.5625 10.5 9.25 10.1875 9.25 9.75C9.25 9.34375 9.5625 9 10 9Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0.46875 11.7812C0.15625 11.5 0.15625 11.0312 0.46875 10.7188C0.75 10.4375 1.21875 10.4375 1.53125 10.7188L3.25 12.4688V1.75C3.25 1.34375 3.5625 1 4 1C4.40625 1 4.75 1.34375 4.75 1.75V12.4688L6.46875 10.75C6.75 10.4375 7.21875 10.4375 7.5 10.75C7.8125 11.0312 7.8125 11.5 7.5 11.7812L4.5 14.7812C4.21875 15.0938 3.75 15.0938 3.46875 14.7812L0.46875 11.7812ZM10 1H14C14.2812 1 14.5625 1.1875 14.6562 1.46875C14.7812 1.71875 14.75 2.03125 14.5312 2.25L11.6562 5.5H14C14.4062 5.5 14.75 5.84375 14.75 6.25C14.75 6.6875 14.4062 7 14 7H10C9.6875 7 9.40625 6.84375 9.3125 6.5625C9.1875 6.3125 9.21875 6 9.4375 5.78125L12.3125 2.5H10C9.5625 2.5 9.25 2.1875 9.25 1.75C9.25 1.34375 9.5625 1 10 1ZM12 8.5H11.9688C12.2812 8.5 12.5312 8.6875 12.6562 8.9375L15.1562 13.9375C15.3438 14.3125 15.1875 14.75 14.8125 14.9375C14.4375 15.125 14 14.9688 13.8125 14.5938L13.375 13.75C13.3438 13.75 13.2812 13.75 13.25 13.75H10.5625L10.1562 14.5938C9.96875 14.9688 9.53125 15.125 9.15625 14.9375C8.78125 14.75 8.625 14.3125 8.8125 13.9375L11.3125 8.9375C11.4375 8.6875 11.6875 8.5 12 8.5ZM11.3125 12.25H12.6562L12 10.9375L11.3125 12.25Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  )}
-                </>
-              }
-              onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
-            />
           </div>
           {filteredContacts.length > 0 ? (
             <ul className="contact-list">
-              {Object.keys(groupedContacts(sortContacts(filteredContacts))).map((letter) => (
+              {Object.keys(groupedContacts(sortContacts([...filteredContacts]))).map((letter) => (
                 <li key={letter}>
                   <h2>{letter}</h2>
                   <ul>
-                    {groupedContacts(sortContacts(filteredContacts))[letter].map((contact) => (
+                    {groupedContacts(sortContacts([...filteredContacts]))[letter].map((contact) => (
                       <Contact
                         active={pathname === `/contact/${contact.id}`}
                         contact={contact}
@@ -332,7 +381,7 @@ function App() {
         className="contact-details"
         data-show={pathname.includes("contact")}
       >
-        <AppRouter onContactDeleted={() => fetchContacts()} />
+        <AppRouter onFavorite={handleFavorite} />
       </div>
     </main>
   );

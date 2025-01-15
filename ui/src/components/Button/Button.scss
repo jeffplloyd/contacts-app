@@ -9,7 +9,8 @@
   --button-tertiary-text: light-dark(#000, #fff);
   --button-tertiary-background: transparent;
   --button-tertiary-border: transparent;
-  --button-tertiary-background-hover: light-dark(rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.05));
+  --button-tertiary-background-hover: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
+  --button-distructive-text: light-dark(#ff3f4d, #ff3f4d);
 }
 
 .button {
@@ -55,7 +56,8 @@
     }
   }
 
-  &--tertiary {
+  &--tertiary,
+  &--distructive {
     border: 1px solid var(--button-tertiary-border);
     background-color: var(--button-tertiary-background);
     color: var(--button-tertiary-text);
@@ -67,6 +69,10 @@
         background-color: var(--button-tertiary-background);
       }
     }
+  }
+
+  &--distructive {
+    color: var(--button-distructive-text);
   }
 
   &--rounded {

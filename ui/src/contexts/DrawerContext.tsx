@@ -4,7 +4,7 @@ import Drawer from "../components/Drawer/Drawer";
 interface DrawerContextValue {
   isOpen: boolean;
   config: {
-    headerText: string;
+    headerText?: string;
     actions: React.ReactNode;
     children: React.ReactNode;
     position?: "left" | "right";
@@ -12,7 +12,7 @@ interface DrawerContextValue {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setConfig: React.Dispatch<
     React.SetStateAction<{
-      headerText: string;
+      headerText?: string;
       actions: React.ReactNode;
       children: React.ReactNode;
       position?: "left" | "right";
@@ -29,7 +29,7 @@ interface DrawerProviderProps {
 const DrawerProvider = ({ children }: DrawerProviderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [config, setConfig] = useState<{
-    headerText: string;
+    headerText?: string;
     position?: "left" | "right";
     actions: React.ReactNode | null;
     children: React.ReactNode | null;

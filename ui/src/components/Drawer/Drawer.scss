@@ -2,10 +2,21 @@
   position: fixed;
   top: 0;
   left: 0;
+  grid-template-columns: 1fr;
   z-index: 100;
   width: 100%;
   height: 100%;
   pointer-events: none;
+
+  @media screen and (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 300px 1fr 560px;
+    grid-template-areas: "space space content";
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 300px 1fr 1fr;
+  }
 
   &--open {
     pointer-events: all;
@@ -15,17 +26,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    // backdrop-filter: saturate(180%) blur(10px);
-    // background-color: light-dark(rgba(130, 130, 130, 0.2), rgba(0, 0, 0, 0.8));
     opacity: 0;
     z-index: -1;
+    backdrop-filter: saturate(180%) blur(10px);
+    background-color: light-dark(rgba(130, 130, 130, 0.2), rgba(0, 0, 0, 0.8));
     width: 100%;
     height: 100%;
-
-    @media screen and (min-width: 768px) {
-      backdrop-filter: saturate(180%) blur(10px);
-      background-color: light-dark(rgba(130, 130, 130, 0.2), rgba(0, 0, 0, 0.8));
-    }
 
     .drawer--open & {
       opacity: 1;
@@ -39,59 +45,34 @@
   }
 
   &__content {
-    display: grid;
-    position: absolute;
-    bottom: -100%;
-    left: 0.25rem;
+    display: none;
+    position: relative;
+    grid-area: content;
+    opacity: 0;
     z-index: 1;
-    width: calc(100% - 0.5rem);
+    margin: 1rem 0 0 0;
+    border-radius: 30px;
+    width: calc(100% - 2rem);
     height: calc(100% - 2.5rem);
-    height: calc((var(--vh, 1vh) * 100) - 2.5rem);
+    height: calc((var(--vh, 1vh) * 100) - 2rem);
 
-    @media screen and (min-width: 768px) {
-      top: 1rem;
-      bottom: auto;
-      left: auto;
-      max-width: 560px;
-      height: calc(100% - 2rem);
+    .drawer--left & {
+      left: 1rem;
+    }
 
-      .drawer--left & {
-        left: -100%;
-      }
-
-      .drawer--right & {
-        right: -100%;
-      }
-
-      .drawer--open.drawer--right & {
-        right: 1rem;
-        animation: slide-in-right 0.2s ease-in-out;
-      }
-
-      .drawer--open.drawer--left & {
-        left: 1rem;
-        animation: slide-in-left 0.2s ease-in-out;
-      }
-
-      .drawer--dismissed.drawer--right & {
-        right: -100%;
-        animation: slide-out-right 0.2s ease-in-out;
-      }
-
-      .drawer--dismissed.drawer--left & {
-        left: -100%;
-        animation: slide-out-left 0.2s ease-in-out;
-      }
+    .drawer--right & {
+      right: -1rem;
     }
 
     .drawer--open & {
-      bottom: 0;
-      animation: slide-in-bottom 0.2s ease-in-out;
+      display: grid;
+      opacity: 1;
+      animation: fade-in 0.1s ease-in-out;
     }
 
     .drawer--dismissed & {
-      bottom: -100%;
-      animation: slide-out-bottom 0.2s ease-in-out;
+      opacity: 0;
+      animation: fade-out 0.1s ease-in-out;
     }
   }
 
@@ -99,8 +80,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--panel-border);
-    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    padding: 0.75rem 0.5rem 0rem 1rem;
+
+    @media screen and (min-width: 768px) {
+      padding: 0.75rem 0.75rem 0rem 1.5rem;
+    }
 
     h2 {
       color: var(--text-primary);
@@ -120,10 +104,19 @@
   }
 
   &__body {
-    padding: 1.5rem 1.5rem 124px 1.5rem;
-    height: calc(100% - 93px);
-    height: calc((var(--vh, 1vh) * 100) - 93px);
+    padding: 1.5rem 1rem 124px 1rem;
+    height: calc(100% - 16px);
+    height: calc((var(--vh, 1vh) * 100) - 16px);
     overflow: auto;
+
+    @media screen and (min-width: 768px) {
+      padding: 1.5rem 1.5rem 124px 1.5rem;
+    }
+
+    .drawer--has-header & {
+      height: calc(100% - 93px);
+      height: calc((var(--vh, 1vh) * 100) - 93px);
+    }
   }
 
   &__actions {
@@ -133,13 +126,10 @@
     justify-content: flex-end;
     gap: 0.75rem;
     backdrop-filter: saturate(180%) blur(10px);
+    border-radius: 0 0 30px 30px;
     background-color: light-dark(rgba(130, 130, 130, 0.2), rgba(0, 0, 0, 0.8));
     padding: 0.75rem 1rem;
     width: calc(100% - 2px);
-
-    @media screen and (min-width: 768px) {
-      border-radius: 0 0 30px 30px;
-    }
   }
 }
 
@@ -158,59 +148,5 @@
   }
   to {
     opacity: 0;
-  }
-}
-
-@keyframes slide-in-left {
-  from {
-    left: -100%;
-  }
-  to {
-    left: 1rem;
-  }
-}
-
-@keyframes slide-out-left {
-  from {
-    left: 1rem;
-  }
-  to {
-    left: -100%;
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    right: -100%;
-  }
-  to {
-    right: 1rem;
-  }
-}
-
-@keyframes slide-out-right {
-  from {
-    right: 1rem;
-  }
-  to {
-    right: -100%;
-  }
-}
-
-@keyframes slide-in-bottom {
-  from {
-    bottom: -100%;
-  }
-  to {
-    bottom: 0;
-  }
-}
-
-@keyframes slide-out-bottom {
-  from {
-    bottom: 0;
-  }
-  to {
-    bottom: -100%;
   }
 }
