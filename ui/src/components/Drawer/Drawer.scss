@@ -12,6 +12,11 @@
     display: grid;
     grid-template-columns: 300px 1fr 560px;
     grid-template-areas: "space space content";
+
+    &.drawer--left {
+      grid-template-columns: 560px 1fr 1fr;
+      grid-template-areas: "content space space";
+    }
   }
 
   @media screen and (min-width: 1200px) {
@@ -62,17 +67,51 @@
 
     .drawer--right & {
       right: -1rem;
+      left: unset;
     }
 
-    .drawer--open & {
+    .drawer--open:not(.drawer--slide) & {
       display: grid;
       opacity: 1;
       animation: fade-in 0.1s ease-in-out;
     }
 
-    .drawer--dismissed & {
+    .drawer--dismissed:not(.drawer--slide) & {
       opacity: 0;
       animation: fade-out 0.1s ease-in-out;
+    }
+
+    .drawer--slide & {
+      display: grid;
+      opacity: 1;
+    }
+
+    .drawer--left.drawer--slide & {
+      left: -100%;
+    }
+
+    .drawer--left.drawer--open.drawer--slide & {
+      left: 1rem;
+      animation: slide-in-left 0.2s ease-in-out;
+    }
+
+    .drawer--left.drawer--dismissed.drawer--slide & {
+      left: -100%;
+      animation: slide-out-left 0.2s ease-in-out;
+    }
+
+    .drawer--right.drawer--slide & {
+      right: -100%;
+    }
+
+    .drawer--right.drawer--open.drawer--slide & {
+      right: -1rem;
+      animation: slide-in-right 0.2s ease-in-out;
+    }
+
+    .drawer--right.drawer--dismissed.drawer--slide & {
+      right: -100%;
+      animation: slide-out-right 0.2s ease-in-out;
     }
   }
 
@@ -148,5 +187,41 @@
   }
   to {
     opacity: 0;
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 1rem;
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    left: 1rem;
+  }
+  to {
+    left: -100%;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 1rem;
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    right: 1rem;
+  }
+  to {
+    right: -100%;
   }
 }

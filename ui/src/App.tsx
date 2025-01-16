@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.scss";
 import Panel from "./components/Panel/Panel";
-import Contact from "./components/Contact/Contact";
 import Button from "./components/Button/Button";
 import FormField from "./components/FormField/FormField";
 import ContactNavigation from "./components/ContactNavigation/ContactNavigation";
@@ -12,6 +11,7 @@ import { useToast } from "./hooks/useToast";
 import { useDrawer } from "./hooks/useDrawer";
 import ContactForm, { ContactFormRef } from "./components/Forms/ContactForm";
 import useViewportSize from "./hooks/useViewportSize";
+import ContactList from "./components/ContactList/ContactList";
 
 function App() {
   const [contacts, setContacts] = useState<ContactType[]>([]);
@@ -40,26 +40,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setFilteredContacts(contacts);
-  }, [contacts]);
-
-  useEffect(() => {
     if (searchQuery === "") {
       if (activeCategory === "all") {
-        setFilteredContacts(contacts);
+        setFilteredContacts([...contacts]);
         return;
       }
       if (activeCategory === "favorites") {
-        setFilteredContacts(contacts.filter((contact) => contact.is_favorite));
+        setFilteredContacts([...contacts].filter((contact) => contact.is_favorite));
         return;
       }
       if (activeCategory) {
-        setFilteredContacts(getContactRoles(contacts)[activeCategory].contacts);
+        setFilteredContacts(getContactRoles([...contacts])[activeCategory].contacts);
         return;
       }
       return;
     }
-    const filtered = contacts.filter((contact) => {
+    const filtered = [...contacts].filter((contact) => {
       const queryLower = searchQuery.toLowerCase();
       const fnameMatch = contact.fname.toLowerCase().startsWith(queryLower);
       const lnameMatch = contact.lname.toLowerCase().startsWith(queryLower);
@@ -79,7 +75,7 @@ function App() {
     try {
       const contactsData = await getContacts();
       setContacts(contactsData);
-      if (contacts.length === 0 && !(window.innerWidth < 1200)) {
+      if (contacts.length === 0 && !(window.innerWidth < 1200) && !pathname.includes("/contact/")) {
         navigate(`/contact/${contactsData[0].id}`, { replace: true });
       }
     } catch (error) {
@@ -96,27 +92,16 @@ function App() {
     }
   };
 
-  const groupedContacts = (contacts: ContactType[]) => {
-    const grouped = contacts.reduce((acc: { [key: string]: ContactType[] }, contact) => {
-      const firstLetter = contact.fname[0].toUpperCase();
-      if (!acc[firstLetter]) {
-        acc[firstLetter] = [];
-      }
-      acc[firstLetter].push(contact);
-      return acc;
-    }, {});
-    return grouped;
-  };
-
   const addContact = () => {
     drawer.setConfig({
       headerText: "Add a Contact",
-      position: "left",
+      position: screenSize !== "sm" ? "left" : "right",
+      transition: "slide",
       actions: (
         <>
           <Button
             variant="tertiary"
-            onClick={() => drawer.setIsOpen(false)}
+            onClick={() => drawer.setDismiss(true)}
           >
             Cancel
           </Button>
@@ -183,6 +168,7 @@ function App() {
             <div className="sidebar__header">
               <h2>Categories</h2>
               <Button
+                label="Close"
                 variant="tertiary"
                 iconOnly
                 rounded
@@ -298,6 +284,7 @@ function App() {
                 />
               </div>
               <Button
+                label="Sort Alphabetically"
                 variant="secondary"
                 rounded={true}
                 icon={
@@ -335,31 +322,12 @@ function App() {
               />
             </div>
           </div>
-          {filteredContacts.length > 0 ? (
-            <ul className="contact-list">
-              {Object.keys(groupedContacts(sortContacts([...filteredContacts]))).map((letter) => (
-                <li key={letter}>
-                  <h2>{letter}</h2>
-                  <ul>
-                    {groupedContacts(sortContacts([...filteredContacts]))[letter].map((contact) => (
-                      <Contact
-                        active={pathname === `/contact/${contact.id}`}
-                        contact={contact}
-                        key={contact.id}
-                        onClick={() => navigate(`/contact/${contact.id}`, { state: null })}
-                        onFavorite={handleFavorite}
-                      />
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+          {filteredContacts.length > 0 ? <ContactList contacts={sortContacts([...filteredContacts])} /> : null}
           {filteredContacts.length === 0 ? (
             <div className="no-results">
               <svg
-                width="55"
-                height="55"
+                width="56"
+                height="56"
                 viewBox="0 0 25 25"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +349,10 @@ function App() {
         className="contact-details"
         data-show={pathname.includes("contact")}
       >
-        <AppRouter onFavorite={handleFavorite} />
+        <AppRouter
+          onFavorite={handleFavorite}
+          onContactDeleted={fetchContacts}
+        />
       </div>
     </main>
   );

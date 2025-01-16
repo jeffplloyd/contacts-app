@@ -1,0 +1,33 @@
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 0 1rem;
+  height: calc(100vh - 169px);
+  height: calc((var(--vh, 1vh) * 100) - 166px);
+  overflow: auto;
+
+  @media screen and (min-width: 768px) {
+    height: calc(100vh - 92px);
+  }
+
+  h2 {
+    position: sticky;
+    top: -2px;
+    backdrop-filter: saturate(180%) blur(4px);
+    background: light-dark(rgba(255, 255, 255, 0.9), rgba(18, 18, 18, 0.9));
+    padding: 1rem 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 0 1rem 0;
+  }
+}

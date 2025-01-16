@@ -10,8 +10,10 @@ interface DrawerProps {
   actions?: React.ReactNode;
   isOpen?: boolean;
   position?: "left" | "right";
+  transition?: "fade" | "slide";
+  dismiss?: boolean;
 }
-const Drawer = ({ children, headerText, actions, position = "right" }: DrawerProps) => {
+const Drawer = ({ children, headerText, actions, position = "right", transition = "fade", dismiss }: DrawerProps) => {
   const actionsRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -22,7 +24,7 @@ const Drawer = ({ children, headerText, actions, position = "right" }: DrawerPro
     if (contentRef?.current) {
       contentRef.current.addEventListener("animationend", (event) => {
         const { animationName } = event;
-        if (animationName.includes("fade-out")) {
+        if (animationName.includes("fade-out") || animationName.includes("slide-out")) {
           setIsOpen(false);
         }
       });
@@ -35,6 +37,12 @@ const Drawer = ({ children, headerText, actions, position = "right" }: DrawerPro
     };
   }, []);
 
+  useEffect(() => {
+    if (dismiss) {
+      handleDismiss();
+    }
+  }, [dismiss]);
+
   const handleDismiss = () => {
     setDismissed(true);
   };
@@ -42,7 +50,7 @@ const Drawer = ({ children, headerText, actions, position = "right" }: DrawerPro
   return (
     <div
       role="presentation"
-      className={`drawer drawer--${position} ${isOpen ? "drawer--open" : ""} ${dismissed ? "drawer--dismissed" : ""} ${headerText ? "drawer--has-header" : ""}`}
+      className={`drawer drawer--${position} drawer--${transition} ${isOpen ? "drawer--open" : ""} ${dismissed ? "drawer--dismissed" : ""} ${headerText ? "drawer--has-header" : ""}`}
     >
       <div
         aria-hidden="true"

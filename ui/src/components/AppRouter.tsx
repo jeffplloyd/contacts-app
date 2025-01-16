@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import ContactDetails from "../views/ContactDetails/ContactDetails";
+import Empty from "../views/Empty/Empty";
 
 interface AppRouterProps {
   onContactDeleted?: () => void;
@@ -12,7 +13,7 @@ const AppRouter = ({ onFavorite, onContactDeleted }: AppRouterProps) => {
     <Routes>
       <Route
         path="/"
-        element={<ContactDetails />}
+        element={<Empty />}
       />
       <Route
         path="contact/:contactId"
@@ -22,6 +23,10 @@ const AppRouter = ({ onFavorite, onContactDeleted }: AppRouterProps) => {
             onFavorite={onFavorite}
           />
         }
+      />
+      <Route
+        path="*"
+        element={<Empty />}
       />
     </Routes>
   );

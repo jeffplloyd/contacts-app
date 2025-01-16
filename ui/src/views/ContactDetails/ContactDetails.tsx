@@ -65,7 +65,7 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
           text: "UNDO",
           onClick: () => handleUndoDelete(deletedContact),
         });
-        drawer.setIsOpen(false);
+        drawer.setDismiss(true);
         navigate("/");
       }
     } catch (error) {
@@ -97,7 +97,7 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
           <div className="edit-contact-actions__right">
             <Button
               variant="tertiary"
-              onClick={() => drawer.setIsOpen(false)}
+              onClick={() => drawer.setDismiss(true)}
             >
               Cancel
             </Button>
@@ -144,6 +144,7 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
             text: "Dismiss",
           });
         }, 200);
+        navigate(`/contact/${contact.id}`);
       }
     } catch (error) {
       if (error instanceof Error) {

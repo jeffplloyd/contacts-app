@@ -32,10 +32,6 @@
 
     &:hover {
       background-color: var(--contact-background-hover);
-
-      .contact__icon--not-favorite {
-        opacity: 1;
-      }
     }
 
     &[data-active="true"] {
@@ -54,10 +50,6 @@
       transition: transform 0.1s ease-in-out;
       width: 1.25rem;
       height: 1.25rem;
-
-      &:active {
-        transform: scale(1.25);
-      }
 
       &--not-favorite {
         opacity: 0;
