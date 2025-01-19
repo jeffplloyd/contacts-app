@@ -186,6 +186,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     const body = {
       ...req.body,
       dob: req.body.dob ? new Date(req.body.dob) : null,
+      created_at: new Date(req.body.created_at),
       updated_at: new Date(),
     };
     const result = Contact.safeParse(body);
@@ -193,7 +194,7 @@ router.put("/:id", async (req: Request, res: Response) => {
       res.status(400).send(result.error.message);
       return;
     }
-    const checkContactExists = await checkForExistingContact(body.fname, body.lname);
+    const checkContactExists = await checkForExistingContact(body.fname, body.lname, body.id);
     if (checkContactExists) {
       res.status(400).send("Contact already exists");
       return;
