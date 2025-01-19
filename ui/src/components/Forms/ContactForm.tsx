@@ -5,14 +5,16 @@ import { useFormik } from "formik";
 import SelectField from "../SelectField/SelectField";
 import { getRoles } from "../../services/roles";
 import { useToast } from "../../hooks/useToast";
-import { ContactDetailsType } from "../../services/contacts";
+import { ContactDetailsType, createContact } from "../../services/contacts";
 import { contactFormSchema } from "./utils";
 import Card from "../Card/Card";
 import Avatar from "../Avatar/Avatar";
 import Button from "../Button/Button";
+import { useDrawer } from "../../hooks/useDrawer";
 
 interface ContactFormProps {
   contact?: ContactDetailsType | null;
+  onFormSubmit?: (contact: ContactDetailsType) => void;
 }
 
 interface RoleOption {
@@ -30,14 +32,15 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
 };
 
-const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, ref) => {
+const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact, onFormSubmit }, ref) => {
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const toast = useToast();
   const hasFetched = useRef(false);
+  const { setDismiss } = useDrawer();
   const formik = useFormik({
     initialValues: {
-      firstName: contact?.fname || "",
-      lastName: contact?.lname || "",
+      fname: contact?.fname || "",
+      lname: contact?.lname || "",
       role: contact?.role_id?.toString() || "",
       personal_email: contact?.personal_email || "",
       work_email: contact?.work_email || "",
@@ -48,7 +51,15 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
     },
     validationSchema: contactFormSchema,
     onSubmit: (values) => {
-      console.log("onSubmit", values);
+      const contactData: ContactDetailsType = {
+        ...values,
+        id: contact?.id || undefined,
+        dob: values.dob === "" ? null : new Date(values.dob),
+        role_id: Number(values.role),
+        created_at: contact?.created_at || new Date(),
+        updated_at: new Date(),
+      };
+      handleSubmit(contactData);
     },
     validateOnChange: false,
   });
@@ -93,12 +104,39 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
     }
   };
 
+  const handleSubmit = async (values: ContactDetailsType) => {
+    if (contact && contact.id) {
+      // Do update
+    } else {
+      try {
+        const newContact: ContactDetailsType | undefined = await createContact(values);
+        setDismiss(true);
+        toast.success("Contact created", 5000, {
+          text: "Dismiss",
+        });
+        if (onFormSubmit && newContact) onFormSubmit(newContact);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+          toast.error("Failed to create contact", null, {
+            text: "Retry",
+            onClick: (id?: string) => {
+              handleSubmit(values);
+              if (id) toast.removeToast(id);
+            },
+          });
+          return;
+        }
+      }
+    }
+  };
+
   return (
     <form className="form">
       <Card>
         <div className="form__avatar">
           <Avatar
-            initals={`${formik.values.firstName && formik.values.firstName[0]}${formik.values.lastName && formik.values.lastName[0]}`}
+            initals={`${formik.values.fname && formik.values.fname[0]}${formik.values.lname && formik.values.lname[0]}`}
             size="large"
           />
           <Button
@@ -127,26 +165,26 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact }, r
         <FormField
           label="First Name"
           type="text"
-          name="firstName"
-          value={formik.values.firstName}
+          name="fname"
+          value={formik.values.fname}
           onChange={formik.handleChange}
-          invalid={!!formik.errors.firstName}
+          invalid={!!formik.errors.fname}
           helperText={
-            formik.errors.firstName ? (
-              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.firstName}</span>
+            formik.errors.fname ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.fname}</span>
             ) : null
           }
         />
         <FormField
           label="Last Name"
           type="text"
-          name="lastName"
-          value={formik.values.lastName}
+          name="lname"
+          value={formik.values.lname}
           onChange={formik.handleChange}
-          invalid={!!formik.errors.lastName}
+          invalid={!!formik.errors.lname}
           helperText={
-            formik.errors.lastName ? (
-              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.lastName}</span>
+            formik.errors.lname ? (
+              <span className="form-field__helper-text form-field__helper-text--error">{formik.errors.lname}</span>
             ) : null
           }
         />

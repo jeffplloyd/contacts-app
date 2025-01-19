@@ -113,9 +113,24 @@ function App() {
           </Button>
         </>
       ),
-      children: <ContactForm ref={contactFormRef} />,
+      children: (
+        <ContactForm
+          ref={contactFormRef}
+          onFormSubmit={handleFormSubmit}
+        />
+      ),
     });
     drawer.setIsOpen(true);
+  };
+
+  const handleContactUpdated = () => {
+    console.log("Contact updated");
+    fetchContacts();
+  };
+
+  const handleFormSubmit = (contact: ContactType) => {
+    navigate(`/contact/${contact.id}`);
+    fetchContacts();
   };
 
   const handleNewContactClick = () => {
@@ -351,6 +366,7 @@ function App() {
       >
         <AppRouter
           onFavorite={handleFavorite}
+          onContactUpdated={handleContactUpdated}
           onContactDeleted={fetchContacts}
         />
       </div>

@@ -18,7 +18,7 @@ interface ContactDetailsProps {
   onContactUpdated?: () => void;
 }
 
-const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) => {
+const ContactDetails = ({ onContactUpdated, onContactDeleted, onFavorite }: ContactDetailsProps) => {
   const { contactId } = useParams();
   const navigate = useNavigate();
   const [contactData, setContactData] = useState<ContactDetailsType | null>(null);
@@ -38,6 +38,7 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
   const fetchContact = async (contactId: number) => {
     try {
       const contact = await getContact(contactId);
+      console.log("dob", contact.dob);
       setContactData(contact);
       setIsFavorite(contact.is_favorite || false);
     } catch (error) {
@@ -114,6 +115,7 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
         <ContactForm
           ref={contactFormRef}
           contact={contactData}
+          onFormSubmit={handleFormSubmit}
         />
       ),
     });
@@ -126,6 +128,10 @@ const ContactDetails = ({ onContactDeleted, onFavorite }: ContactDetailsProps) =
       toast.info(isFavorite ? "Removed from favorites" : "Added to favorites", 5000, { text: "Dismiss" });
       setIsFavorite(!isFavorite);
     }
+  };
+
+  const handleFormSubmit = () => {
+    if (onContactUpdated) onContactUpdated();
   };
 
   const handleUndoDelete = async (deletedContact: ContactDetailsType) => {

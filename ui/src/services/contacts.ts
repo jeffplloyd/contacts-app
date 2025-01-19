@@ -23,7 +23,7 @@ export const getContact = async (id: number) => {
   const data = await response.json();
   const result = Contact.safeParse({
     ...data,
-    dob: new Date(data.dob),
+    dob: data.dob ? new Date(data.dob) : null,
     created_at: new Date(data.created_at),
     updated_at: new Date(data.updated_at),
   });
@@ -68,7 +68,7 @@ export const deleteContact = async (id: number) => {
   const data = await response.json();
   const result = Contact.safeParse({
     ...data,
-    dob: new Date(data.dob),
+    dob: data.dob ? new Date(data.dob) : null,
     created_at: new Date(data.created_at),
     updated_at: new Date(data.updated_at),
   });
@@ -81,8 +81,7 @@ export const deleteContact = async (id: number) => {
 export const createContact = async (contact: ContactDetailsType) => {
   const validate = Contact.safeParse(contact);
   if (!validate.success) {
-    console.error(`Invalid person data: ${validate.error}`);
-    return;
+    throw new Error(`Invalid person data: ${validate.error}`);
   }
   const response = await fetch(`${apiUri}/contacts`, {
     method: "POST",
@@ -94,7 +93,7 @@ export const createContact = async (contact: ContactDetailsType) => {
   const data = await response.json();
   const result = Contact.safeParse({
     ...data,
-    dob: new Date(data.dob),
+    dob: data.dob ? new Date(data.dob) : null,
     created_at: new Date(data.created_at),
     updated_at: new Date(data.updated_at),
   });

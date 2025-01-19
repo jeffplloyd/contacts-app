@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 export const contactFormSchema = Yup.object().shape({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
+  fname: Yup.string().required("First name is required"),
+  lname: Yup.string().required("Last name is required"),
   role: Yup.string().required("Role is required"),
   personal_email: Yup.string().email("Invalid email"),
   work_email: Yup.string().email("Invalid email"),
