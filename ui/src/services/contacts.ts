@@ -90,6 +90,43 @@ export const createContact = async (contact: ContactDetailsType) => {
     },
     body: JSON.stringify(contact),
   });
+  if (!response.ok) {
+    throw new Error("Failed to create contact");
+  }
+  if (response.status === 400) {
+    throw new Error("Contact already exists");
+  }
+  const data = await response.json();
+  const result = Contact.safeParse({
+    ...data,
+    dob: data.dob ? new Date(data.dob) : null,
+    created_at: new Date(data.created_at),
+    updated_at: new Date(data.updated_at),
+  });
+  if (!result.success) {
+    throw new Error(`Invalid person data: ${result.error}`);
+  }
+  return result.data;
+};
+
+export const updateContact = async (id: number, contact: ContactDetailsType) => {
+  const validate = Contact.safeParse(contact);
+  if (!validate.success) {
+    throw new Error(`Invalid person data: ${validate.error}`);
+  }
+  const response = await fetch(`${apiUri}/contacts/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(validate.data),
+  });
+  if (!response.ok) {
+    if (response.status === 400) {
+      throw new Error("Contact already exists");
+    }
+    throw new Error("Failed to update contact");
+  }
   const data = await response.json();
   const result = Contact.safeParse({
     ...data,

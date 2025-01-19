@@ -23,7 +23,7 @@ const maskOptions = (type: string) => {
   return {
     mask: type === "date" ? "mm/dd/yyyy" : "(___) ___-____",
     replacement: type === "date" ? ({ d: /\d/, m: /\d/, y: /\d/ } as Replacement) : ({ _: /\d/ } as Replacement),
-    showMask: true,
+    showMask: type === "phone" ? true : false,
   };
 };
 

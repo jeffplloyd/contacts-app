@@ -130,7 +130,9 @@ const ContactDetails = ({ onContactUpdated, onContactDeleted, onFavorite }: Cont
     }
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (contact: ContactDetailsType) => {
+    if (!contact.id) return;
+    setContactData(contact);
     if (onContactUpdated) onContactUpdated();
   };
 
@@ -299,7 +301,9 @@ const ContactDetails = ({ onContactUpdated, onContactDeleted, onFavorite }: Cont
                   </svg>
                 }
                 variant="secondary"
-                onClick={() => (window.location.href = `sms:?&body=Hi ${contactData?.fname}!`)}
+                onClick={() =>
+                  (window.location.href = `sms:${contactData?.personal_phone?.replace(/[^0-9]/g, "")}?&body=Hi ${contactData?.fname}!`)
+                }
               />
               <Button
                 label="Email"

@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import SelectField from "../SelectField/SelectField";
 import { getRoles } from "../../services/roles";
 import { useToast } from "../../hooks/useToast";
-import { ContactDetailsType, createContact } from "../../services/contacts";
+import { ContactDetailsType, createContact, updateContact } from "../../services/contacts";
 import { contactFormSchema } from "./utils";
 import Card from "../Card/Card";
 import Avatar from "../Avatar/Avatar";
@@ -56,7 +56,8 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact, onF
         id: contact?.id || undefined,
         dob: values.dob === "" ? null : new Date(values.dob),
         role_id: Number(values.role),
-        created_at: contact?.created_at || new Date(),
+        is_favorite: contact?.is_favorite ? contact.is_favorite : false,
+        created_at: contact?.created_at ? new Date(contact.created_at) : new Date(),
         updated_at: new Date(),
       };
       handleSubmit(contactData);
@@ -106,7 +107,22 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact, onF
 
   const handleSubmit = async (values: ContactDetailsType) => {
     if (contact && contact.id) {
-      // Do update
+      try {
+        const updatedContact = await updateContact(contact.id, values);
+        setDismiss(true);
+        toast.success("Contact updated", 5000, {
+          text: "Dismiss",
+        });
+        if (onFormSubmit && updatedContact) onFormSubmit(updatedContact);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+          toast.error(error.message, null, {
+            text: "Dismiss",
+          });
+          return;
+        }
+      }
     } else {
       try {
         const newContact: ContactDetailsType | undefined = await createContact(values);
@@ -118,12 +134,8 @@ const ContactForm = forwardRef<ContactFormRef, ContactFormProps>(({ contact, onF
       } catch (error) {
         if (error instanceof Error) {
           console.error(error);
-          toast.error("Failed to create contact", null, {
-            text: "Retry",
-            onClick: (id?: string) => {
-              handleSubmit(values);
-              if (id) toast.removeToast(id);
-            },
+          toast.error(error.message, null, {
+            text: "Dismiss",
           });
           return;
         }
