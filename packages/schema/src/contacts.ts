@@ -9,12 +9,12 @@ export const ListContact = z.object({
 });
 
 export const Contact = ListContact.extend({
-  dob: z.date().nullable().optional(),
-  website: z.string().max(100).url().nullable().optional(),
-  personal_email: z.string().max(100).email().nullable().optional(),
-  personal_phone: z.string().max(20).nullable().optional(),
-  work_email: z.string().max(100).email().nullable().optional(),
-  work_phone: z.string().max(20).nullable().optional(),
+  dob: z.date().nullish(),
+  website: z.string().max(0).or(z.string().url()),
+  personal_email: z.string().max(0).or(z.string().email()),
+  personal_phone: z.string().max(20).optional(),
+  work_email: z.string().max(0).or(z.string().email()),
+  work_phone: z.string().max(20).optional(),
   role_id: z.number().optional(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),

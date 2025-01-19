@@ -116,7 +116,7 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     const body = {
       ...req.body,
-      dob: new Date(req.body.dob),
+      dob: req.body.dob ? new Date(req.body.dob) : null,
       created_at: req.body.created_at ? new Date(req.body.created_at) : new Date(),
       updated_at: req.body.updated_at ? new Date(req.body.updated_at) : new Date(),
     };
@@ -148,7 +148,7 @@ router.post("/", async (req: Request, res: Response) => {
       values: [
         sanitizedInput(fname),
         sanitizedInput(lname),
-        sanitizedInput(dob.toISOString().split("T")[0]),
+        dob ? sanitizedInput(dob.toISOString().split("T")[0]) : null,
         sanitizedInput(website),
         sanitizedInput(personal_email),
         sanitizedInput(personal_phone),
@@ -185,7 +185,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   try {
     const body = {
       ...req.body,
-      dob: new Date(req.body.dob),
+      dob: req.body.dob ? new Date(req.body.dob) : null,
       updated_at: new Date(),
     };
     const result = Contact.safeParse(body);
@@ -217,7 +217,7 @@ router.put("/:id", async (req: Request, res: Response) => {
       values: [
         sanitizedInput(fname),
         sanitizedInput(lname),
-        sanitizedInput(dob.toISOString().split("T")[0]),
+        dob ? sanitizedInput(dob.toISOString().split("T")[0]) : null,
         sanitizedInput(website),
         sanitizedInput(personal_email),
         sanitizedInput(personal_phone),
