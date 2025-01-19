@@ -1,11 +1,9 @@
-import { z } from "zod";
-import { Contact as CostactSchema } from "schema";
 import "./Contact.scss";
 import Badge from "../Badge/Badge";
 import Avatar from "../Avatar/Avatar";
 import { useEffect, useState } from "react";
+import { ContactType } from "../../services/contacts";
 
-type ContactType = z.infer<typeof CostactSchema>;
 interface ContactProps {
   active?: boolean;
   contact: ContactType;
