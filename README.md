@@ -6,8 +6,8 @@ This project is a mono-repo consisting of a NodeJS backend, React UI front-end a
 **Prerequisites**
 - NodeJS knowledge
 - Some Docker knowledge
-  - Docker installed
-  - docker-compose installed
+  - Docker required
+  - docker-compose required
   - Docker Desktop/Podman/Rancher Desktop is nice to have for conatiner/image management
 - Some Postgres or SQL knowledge
 - React and Typescript knowledge
