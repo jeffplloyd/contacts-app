@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 app.use("/contacts", contactsRoutes);
 app.use("/roles", rolesRoutes);
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.SERVER_ENV !== "production") {
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 }
 
