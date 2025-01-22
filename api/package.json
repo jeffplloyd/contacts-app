@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "npm run generate:docs && ts-node src/index.ts",
     "dev": "npm run generate:docs && nodemon src/index.ts",
     "build": "npm run generate:docs && tsc",
     "serve": "node dist/index.js",
