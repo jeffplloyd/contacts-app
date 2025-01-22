@@ -1,4 +1,7 @@
 import swaggerAutogen from "swagger-autogen";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const doc = {
   info: {
@@ -6,7 +9,11 @@ const doc = {
     title: "My API",
     description: "Description",
   },
-  host: "localhost:3000",
+  servers: [
+    {
+      url: process.env.API_HOST || "http://localhost:3000",
+    },
+  ],
   schemes: ["http"],
   definitions: {
     Contact: {

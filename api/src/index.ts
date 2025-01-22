@@ -6,7 +6,7 @@ import swaggerOutput from "./swagger-output.json";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || ["http://localhost:3000", "http://localhost:5173"];
 
 app.use(express.json());
 app.use((req, res, next) => {
@@ -21,7 +21,9 @@ app.use((req, res, next) => {
 app.use("/contacts", contactsRoutes);
 app.use("/roles", rolesRoutes);
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
+if (process.env.NODE_ENV !== "production") {
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
+}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

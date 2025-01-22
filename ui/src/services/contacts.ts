@@ -3,7 +3,7 @@ import { ListContact, Contact } from "schema";
 export type ContactType = Zod.infer<typeof ListContact>;
 export type ContactDetailsType = Zod.infer<typeof Contact>;
 
-const apiUri = "http://192.168.4.223:3000";
+const apiUri = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const getContacts = async () => {
   const response = await fetch(`${apiUri}/contacts/list`);

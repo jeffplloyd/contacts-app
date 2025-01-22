@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+ARG API_COMMAND
+ENV API_COMMAND ${API_COMMAND:-dev}
+
 WORKDIR /
 
 COPY api/package*.json ./
@@ -12,4 +15,4 @@ COPY ./api ./
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD ["sh", "-c", "npm run $API_COMMAND"]
